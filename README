@@ -1,0 +1,26 @@
+
+Tweet Filesharing
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Source Code: http://github.com/gleuch/tweet-fileshare
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+INSTALLATION
+  - Clone this repo (git clone git://github.com/gleuch/tweet-fileshare.git) into a web-accessible directory.
+  - Rename settings.yml.default to settings.yml
+      *** Change settings as needed. Be sure to add your Twitter OAuth key and secret strings! ***
+  - Run.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+KNOWN BUGS
+  - None, at the moment.
+
+TODO
+  - None, at the moment.
+
+NOTES
+  - With DataMapper > 0.10.0, you may get a NoMethodError on 'find_by_sql'. To fix, install the dm-ar-finders gem.

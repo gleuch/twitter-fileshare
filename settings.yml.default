@@ -1,0 +1,37 @@
+development: &local
+  site_name:        Tweet Fileshare
+  site_language:    en
+
+  template_name:          default
+
+  twitter_oauth_token:		ENTER-YOUR-TOKEN-HERE
+  twitter_oauth_secret:		ENTER-YOUR-TOKEN-SECRET-HERE
+
+  auth_logins:            ['username:password'] # Can push additional ones onto this array
+
+  db_type:        sqlite
+  db_connection:  sqlite3:///ROOT/tweetfs_dev.db
+
+production:
+  <<: *local
+
+	# db_type:          mysql
+	# db_connection:    mysql://root:*****@localhost/tweetfs_prod
+	db_type:          sqlite
+  db_connection:    sqlite3:///ROOT/tweetfs_prod.db
+
+  twitter_retweet_percent:    25
+  twitter_retweet_max:        500
+
+
+staging:
+  <<: *local
+
+	db_type:        sqlite
+  db_connection:  sqlite3:///ROOT/tweetfs_stage.db
+
+test:
+  <<: *local
+
+	db_type:        sqlite
+  db_connection:  sqlite3:///ROOT/tweetfs_test.db
