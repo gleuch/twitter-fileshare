@@ -11,7 +11,7 @@ class User
   property :updated_at,       DateTime
 
   has n, :user_files
-  has n, :files, :through => :user_file
+  has n, :files, :through => :user_files
 end
 
 class File
