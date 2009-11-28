@@ -4,6 +4,19 @@
 require 'rubygems'
 require 'sinatra'
 
+configure :development do
+  class Sinatra::Reloader < Rack::Reloader
+     def safe_load(file, mtime, stderr = $stderr)
+       if file == __FILE__
+         ::Sinatra::Application.reset!
+         stderr.puts "#{self.class}: reseting routes"
+       end
+       super
+     end
+  end 
+  use Sinatra::Reloader
+end
+
 configure do
   ROOT = File.expand_path(File.dirname(__FILE__))
 
@@ -31,6 +44,11 @@ configure do
   set :sessions, true
   set :views, File.dirname(__FILE__) + '/views/'+ configatron.template_name
   set :public, File.dirname(__FILE__) + '/public/'+ configatron.template_name
+end
+
+configure :development do
+  set :raise_errors, Proc.new { false }
+  set :show_exceptions, false
 end
 
 
@@ -94,21 +112,14 @@ end
 
 
 
-
-# 404 errors
+# 404 (file not found) errors
 not_found do
-  # cache "error/404", :expiry => 600, :compress => true do
-    get_sidebar_details
-    @error = 'Sorry, but the page you were looking for could not be found.</p><p><a href="/">Click here</a> to return to the homepage.'
-    haml :fail
-  # end
+  @error = 'Sorry, but the page you were looking for could not be found.</p><p><a href="/">Click here</a> to return to the homepage.'
+  haml :fail
 end
 
-
-# 500 errors
+# 500 (unspecific) errors
 error do
-  # cache "error/500", :expiry => 600, :compress => true do
-    get_sidebar_details
-    haml :fail
-  # end
+  @error = request.env['sinatra.error'].message || "You've hit an undocumented error."
+  haml :fail
 end

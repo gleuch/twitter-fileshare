@@ -9,6 +9,8 @@ development: &local
 
   auth_logins:            ['username:password'] # Can push additional ones onto this array
 
+  folder_path:            'files'
+
   db_type:        sqlite
   db_connection:  sqlite3:///ROOT/tweetfs_dev.db
 
