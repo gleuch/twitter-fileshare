@@ -33,28 +33,36 @@ get '/admin/run' do
   
   @users.each do |user|
     STDERR.puts "User: #{user.screen_name}..."
-    file = user.files.first(:order => [:started_at.asc, :created_at.asc], :conditions => ['finished_at IS NOT NULL']) rescue nil
-    next if file.nil? # Assume that user has no files queued.
-    
+    userfile = user.user_files.first(:order => [:started_at.asc, :created_at.asc], :conditions => ['finished_at IS NULL']) rescue nil
+    next if userfile.nil? || userfile.file.nil? # Assume that user has no files queued.
+
+    file = userfile.file
+    STDERR.puts "File: #{file.name}..."
+
     begin
       twitter_connect(user)
     
-      unless file.active
+      if userfile.started_at.nil?
         md5 = md5_file(file.name)
-        @twitter_client.update("New file: #{name}. MD5: #{md5}")
-        # file.update(:active => true)
+        @twitter_client.update("New file: #{file.name} (MD5: #{md5})")
+        userfile.update(:started_at => Time.now)
+        sleep 1
+      else
+        tweet = read_from_file(file.name, (userfile.cursor || 0))
+        unless tweet[:msg].blank?
+          info = @twitter_client.update(tweet[:msg].to_s)
+          if info && (info[:id] || '').match(/\d+/)
+            userfile.update(:active => true, :cursor => tweet[:cursor])
+            Tweet.new(:tweet_id => info[:id], :tweet_message => tweet[:msg], :cursor => tweet[:cursor], :user_id => user.id, :file_id => file.id)
+          end
+   
+        # Otherwise, asssume it is the end of the file.
+        else
+          md5 = md5_file(file.name)
+          @twitter_client.update("End of file: #{file.name} (MD5: #{md5})")
+          file.update(:finished_at => Time.now)
+        end
       end
-    
-      # tweet = read_from_file(file.name, file.cursor)
-      # info = @twitter_client.update(tweet[:msg])
-      #
-      # if info === true
-      #   file.update(:active => true, :cursor => tweet[:cursor])
-      #   Tweet.new(:tweet_id => info, :tweet_message => tweet[:msg], :cursor => tweet[:cursor], :user_id => user.id, :file_id => file.id)
-      # end
-      #     
-      # # check if end of file... if so, close out
-      # # file.update(:finished_at => Time.now) if false
     rescue
       STDERR.puts "There was an error sending a file for @#{user.screen_name}."
     end

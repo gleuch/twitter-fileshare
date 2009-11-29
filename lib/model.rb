@@ -34,10 +34,10 @@ class UserFile
   property :id,               Serial
   property :user_id,          Integer
   property :file_id,          Integer
-  property :cursor,           Integer
+  property :cursor,           Integer, :nullable => true
   property :active,           Boolean
-  property :started_at,       DateTime
-  property :finished_at,      DateTime
+  property :started_at,       DateTime, :nullable => true
+  property :finished_at,      DateTime, :nullable => true
   property :created_at,       DateTime
   property :updated_at,       DateTime
 
@@ -51,13 +51,13 @@ class Tweet
 
   property :id,               Serial
   property :tweet_id,         String # So large, needs to be string!
-  property :tweet_message,    String
+  property :tweet_message,    Text
   property :cursor,           Integer
   property :user_id,          Integer
   property :file_id,          Integer
   property :created_at,       DateTime
 
-  has 1, :user
-  has 1, :file
+  belongs_to :user
+  belongs_to :file
 
 end

@@ -7,8 +7,8 @@ require 'sinatra'
 
 
 configure :development do
-  set :raise_errors, Proc.new { false }
-  set :show_exceptions, false
+  # set :raise_errors, Proc.new { false }
+  # set :show_exceptions, false
 
   class Sinatra::Reloader < Rack::Reloader
      def safe_load(file, mtime, stderr = $stderr)
