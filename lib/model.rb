@@ -35,6 +35,7 @@ class UserFile
   property :user_id,          Integer
   property :file_id,          Integer
   property :cursor,           Integer
+  property :active,           Boolean
   property :started_at,       DateTime
   property :finished_at,      DateTime
   property :created_at,       DateTime

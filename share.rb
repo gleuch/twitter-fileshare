@@ -4,7 +4,12 @@
 require 'rubygems'
 require 'sinatra'
 
+
+
 configure :development do
+  set :raise_errors, Proc.new { false }
+  set :show_exceptions, false
+
   class Sinatra::Reloader < Rack::Reloader
      def safe_load(file, mtime, stderr = $stderr)
        if file == __FILE__
@@ -17,11 +22,12 @@ configure :development do
   use Sinatra::Reloader
 end
 
+
 configure do
   ROOT = File.expand_path(File.dirname(__FILE__))
 
   # Libraries, etc.
-  %w(twitter_oauth configatron haml lib/spork lib/authenticate).each{|lib| require lib}
+  %w(twitter_oauth configatron haml lib/spork lib/authenticate digest/md5).each{|lib| require lib}
 
   # Configatron settings
   configatron.configure_from_yaml("#{ROOT}/settings.yml", :hash => Sinatra::Application.environment.to_s)
@@ -44,11 +50,6 @@ configure do
   set :sessions, true
   set :views, File.dirname(__FILE__) + '/views/'+ configatron.template_name
   set :public, File.dirname(__FILE__) + '/public/'+ configatron.template_name
-end
-
-configure :development do
-  set :raise_errors, Proc.new { false }
-  set :show_exceptions, false
 end
 
 

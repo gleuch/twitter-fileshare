@@ -27,4 +27,11 @@ helpers do
     fpath = "#{configatron.folder_path}/#{file}".gsub(/\/\//, '/')
     return (File.file?(fpath) ? fpath : false)
   end
+
+  def md5_file(file)
+    path = find_file(file)
+    raise 'File not found.' unless path
+    return Digest::MD5.hexdigest(File.new(path).read) rescue false
+  end
+
 end
