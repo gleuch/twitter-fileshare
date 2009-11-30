@@ -1,4 +1,23 @@
-ADMIN AREA!
+%h1 #{configatron.site_name} Admin Area
 
-%p= @tweet
-%p= @cursor
+%p
+  %a.button{:href => '/admin/connect'} Add a user
+
+%dl
+  %dt Queue
+  - unless @queue.blank?
+    - @queue.each do |file|
+      %dd
+        %h6
+          %a{:href => "/admin/queue/#{file.id}"}= file.file.name
+          - if file.cursor_length && file.cursor_position
+            (#{sprintf("%.05f", (file.cursor_position/file.cursor_length.to_f)*100)}% complete)
+            = file_time_left(file)
+          - else
+            (0% complete)
+        %p
+          Queued by
+          %a{:href => "/admin/users/#{file.user.id}"} @#{file.user.screen_name}
+      
+  - else
+    %dd.suggest There are no users.

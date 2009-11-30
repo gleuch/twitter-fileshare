@@ -34,7 +34,8 @@ class UserFile
   property :id,               Serial
   property :user_id,          Integer
   property :file_id,          Integer
-  property :cursor,           Integer, :nullable => true
+  property :cursor_position,  Integer, :nullable => true
+  property :cursor_length,    Integer, :nullable => true
   property :active,           Boolean
   property :started_at,       DateTime, :nullable => true
   property :finished_at,      DateTime, :nullable => true
@@ -52,7 +53,7 @@ class Tweet
   property :id,               Serial
   property :tweet_id,         String # So large, needs to be string!
   property :tweet_message,    Text
-  property :cursor,           Integer
+  property :cursor_position,  Integer
   property :user_id,          Integer
   property :file_id,          Integer
   property :created_at,       DateTime

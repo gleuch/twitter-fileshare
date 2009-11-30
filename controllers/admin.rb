@@ -6,20 +6,7 @@
 get '/admin' do
   require_administrative_privileges
 
-
-
-  # Not the right place for this, but great spot for quick testing of read_from_file helper func.
-  # info = read_from_file('04 The Five Alive Song.mp3')
-
-  info = md5_file('04 The Five Alive Song.mp3')
-  STDERR.puts "MD5: #{info}"
-
-  # 
-  # @tweet = info[:msg]
-  # @cursor = info[:cursor]
-  # 
-  # 
-  # STDERR.puts "Tweet (#{@cursor}): #{@tweet}"
+  @queue = UserFile.all(:conditions => ["finished_at IS NULL AND active=?", true], :order => [:started_at.asc]) rescue nil
 
   haml :'admin/index'
 end
@@ -39,38 +26,53 @@ get '/admin/run' do
     file = userfile.file
     STDERR.puts "File: #{file.name}..."
 
-    begin
+    # begin
       twitter_connect(user)
-    
+
       if userfile.started_at.nil?
         md5 = md5_file(file.name)
-        @twitter_client.update("New file: #{file.name} (MD5: #{md5})")
-        userfile.update(:started_at => Time.now)
-        sleep 1
-      else
-        tweet = read_from_file(file.name, (userfile.cursor || 0))
-        unless tweet[:msg].blank?
-          info = @twitter_client.update(tweet[:msg].to_s)
-          if info && (info[:id] || '').match(/\d+/)
-            userfile.update(:active => true, :cursor => tweet[:cursor])
-            Tweet.new(:tweet_id => info[:id], :tweet_message => tweet[:msg], :cursor => tweet[:cursor], :user_id => user.id, :file_id => file.id)
-          end
-   
-        # Otherwise, asssume it is the end of the file.
+        info = @twitter_client.update("New file: #{file.name} (MD5: #{md5})")
+
+        if info && (info['id'].to_s || '').match(/\d+/)
+          userfile.update(:started_at => Time.now)
         else
-          md5 = md5_file(file.name)
-          @twitter_client.update("End of file: #{file.name} (MD5: #{md5})")
-          file.update(:finished_at => Time.now)
+          (@errors ||= []) << "Could not sent BOF tweet to #{user.screen_name}."
+        end
+
+        sleep 5 # Slow us down for a sec
+      end
+
+      tweet = read_from_file(file, (userfile.cursor_position || 0))
+
+      # Start tweet if there is something to tweet.
+      unless tweet[:msg].blank?
+        info = @twitter_client.update(tweet[:msg].to_s)
+        if info && (info['id'].to_s || '').match(/\d+/)
+          userfile.update(:active => true, :cursor_position => tweet[:cursor])
+          Tweet.new(:tweet_id => info['id'], :tweet_message => tweet[:msg], :cursor_position => tweet[:cursor], :user_id => user.id, :file_id => file.id)
+        else
+          (@errors ||= []) << "Could not sent tweet to #{user.screen_name}."
+        end
+         
+      # Otherwise, asssume it is the end of the file.
+      else
+        md5 = md5_file(file.name)
+        info = @twitter_client.update("End of file: #{file.name} (MD5: #{md5})")
+        if info && (info['id'].to_s || '').match(/\d+/)
+          userfile.update(:finished_at => Time.now)
+        else
+          (@errors ||= []) << "Could not sent EOF tweet to #{user.screen_name}."
         end
       end
-    rescue
-      STDERR.puts "There was an error sending a file for @#{user.screen_name}."
-    end
+    # rescue
+    #   (@errors ||= []) << "There was an error sending a file for @#{user.screen_name}."
+    # end
   end
 
 
+  @error = @errors.join('<br />') rescue nil
+  @error ||= 'This page coming soon.'
 
-  @error = 'This page coming soon.'
   haml :fail
 end
 
