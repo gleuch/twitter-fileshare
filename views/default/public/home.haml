@@ -1,1 +1,57 @@
-%h1 Welcome
+#latest_tweet.box
+  %h2 Latest Tweet
+  .content
+    - unless @tweet.blank?
+      - p @tweet
+      .tweet
+        %h3= @tweet['status']['text'] rescue 'Could not load tweet&hellip;'
+        %p
+          %a{:href => "http://www.twitter.com/#{@tweet['screen_name']}/statuses/#{@tweet['status']['id']}"} View Tweet
+          &nbsp;&nbsp;/&nbsp;&nbsp;
+          %a{:href => "http://www.twitter.com/#{@tweet['screen_name']}"} Follow @#{@tweet['screen_name']}
+
+    - else
+      %p.suggest #{configatron.site_name} has not tweeted yet. OH MY!
+
+
+#current_seeds.box
+  %h2 Currently Seeded Files
+  .content
+    - unless @current_files.blank?
+      - @current_files.each do |file|
+        - pct = (file.cursor_position/file.cursor_length.to_f)*100
+        .file
+          %h3
+            = file.file.name
+            %span.note (#{file_size(file.file.name)})
+          .status.rel.c
+            .pct.abs #{sprintf("%.02f", pct)}%
+            .bar{:style => "width: #{pct.ceil}%;"} &nbsp;
+          %p
+            Time remaining: #{file_time_left(file)}
+            &nbsp;&nbsp;/&nbsp;&nbsp;
+            %a{:href => "http://www.twitter.com/#{file.user.screen_name}"} Follow @#{file.user.screen_name}
+
+    - else
+      %p.suggest There are no seeds being shared at this time.
+
+
+#completed_seeds.box
+  %h2 Completed Seeded Files
+  .content
+    - unless @completed_files.blank?
+      - @completed_files.each do |file|
+        .file
+          %a{:href => "/leech/#{file.id}"}
+            %h3= file.file.name
+            %p Download from Twitter (#{file_size(file.file.name)})
+    - else
+      %p.suggest There are no completed seeds at this time.
+
+
+#about.box
+  %h2 About
+  .content
+    %h3 Some Heading Title
+    %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id elit sed elit ornare feugiat. Curabitur interdum lorem ac nisi vehicula semper. Curabitur eget tortor mauris. Donec urna ante, congue eu auctor sit amet, laoreet a odio. Curabitur rutrum erat ut diam dictum congue. Curabitur at orci felis, et tempus dui. Maecenas mattis magna ut massa feugiat et cursus risus sagittis. Sed sagittis leo eget libero viverra at rhoncus tellus laoreet. Nam non dolor eget est suscipit venenatis ut sit amet tellus. Donec lacinia viverra congue. Mauris ornare dolor et nisl iaculis viverra. Vivamus eget placerat sem. Vivamus gravida commodo justo, vitae malesuada elit rhoncus suscipit. Nunc in quam sed elit pellentesque molestie. Sed commodo ornare dui, sit amet consectetur risus porttitor quis. Suspendisse eros enim, semper id rhoncus at, ultrices id sapien. Aliquam tincidunt convallis suscipit. Curabitur cursus quam non magna condimentum posuere.
+    %p Mauris cursus elit magna. Sed imperdiet hendrerit dui at ultrices. Nullam feugiat magna eget sem rutrum vestibulum. Vestibulum ac neque non magna pellentesque laoreet. Morbi ullamcorper, velit a consequat accumsan, neque odio blandit ipsum, nec blandit ipsum libero sodales nunc. Etiam molestie, mi rhoncus lacinia pellentesque, mauris libero dignissim odio, vitae iaculis sapien turpis vel urna. Curabitur at ante a augue molestie bibendum. Fusce pretium, dolor ut facilisis dignissim, felis sapien rhoncus sem, id imperdiet enim arcu eget sem. Suspendisse id diam massa, in scelerisque diam.  

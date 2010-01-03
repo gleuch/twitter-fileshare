@@ -7,8 +7,19 @@
     %meta{:name => 'description', :content => ""}
     %link{:rel => 'icon', :href => '/favicon.ico'}
     %link{:href => '/css/screen.css', :media => 'all', :rel => 'stylesheet', :type => 'text/css'}
+    %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js'}
+    %script{:type => 'text/javascript', :src => '/js/sprintf.js'}
+    %script{:type => 'text/javascript', :src => '/js/application.js'}
 
   %body
     #container
+      %h1
+        %a{:href => '/'}= configatron.site_name
+
       #content
         = yield
+
+      #footer
+        %p Copyfree &amp; open-sourced by <a href='http://www.gleuch.com'>Greg Leuch</a>, <a href='http://www.theowatson.com'>Theo Watson</a>, and the <a href='http://www.fffff.at'>Free Art and Technology Lab</a>.
+        %p
+          %strong <a href='http://www.github.com/gleuch/tweet-fileshare'>Get the code</a> and start seeding!

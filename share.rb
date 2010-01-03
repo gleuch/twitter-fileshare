@@ -27,7 +27,7 @@ configure do
   ROOT = File.expand_path(File.dirname(__FILE__))
 
   # Libraries, etc.
-  %w(twitter_oauth configatron haml lib/spork lib/authenticate digest/md5 base6).each{|lib| require lib}
+  %w(twitter_oauth configatron haml lib/spork lib/authenticate digest/md5 base64).each{|lib| require lib}
 
   # Configatron settings
   configatron.configure_from_yaml("#{ROOT}/settings.yml", :hash => Sinatra::Application.environment.to_s)

@@ -13,14 +13,13 @@ helpers do
 
     pct_now = (file.cursor_position/file.cursor_length.to_f)*100
 
-    p Time.now.to_i
-    p Time.parse(file.started_at.to_s).to_i
-
     time_now = (Time.now.to_i - Time.parse(file.started_at.to_s).to_i)
     time_left = (time_now*100)/pct_now.to_f
     
     str = Time.at(Time.now.to_i + time_left)
-    "Left: #{str}"
+    "#{str}"
+  rescue
+    "&#8734;"
   end
 
   def read_from_file(file, cursor=0)
@@ -50,6 +49,36 @@ helpers do
     path = find_file(file)
     raise 'File not found.' unless path
     return Digest::MD5.hexdigest(File.new(path).read) rescue false
+  end
+
+  def file_size(file, dec=false)
+    path = find_file(file)
+    raise 'File not found.' unless path
+
+    size = File.size(path) rescue 0
+    fsize, pwr = size, 0
+
+    # Determine its power (i guess?)
+    while fsize > 1000
+      fsize = fsize/1000.to_f
+      pwr += 1
+    end
+
+    num = sprintf("%.01f", fsize)
+
+    return num if dec # return as decimal 
+
+    # Get the ending
+    ending = case pwr
+      when 5; 'PB'
+      when 4; 'TB'
+      when 3; 'GB'
+      when 2; 'MB'
+      when 1; 'kB'
+      else; 'B'
+    end
+
+    return "#{num} #{ending}"
   end
 
 end

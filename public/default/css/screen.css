@@ -1,0 +1,53 @@
+* {margin: 0; padding: 0;}
+body {font-family: Helvetica, Arial, Verdana, sans-serif; font-size: 62.5%; color: #000000;}
+
+h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd, dt, li, code, pre, q, blockquote {clear: both; display: block; vertical-align: top; line-height: 1.0em; color: #000000;}
+h1, h2, h3, h4, h5, h6, p {font-family: Helvetica, Arial, Verdana, sans-serif; padding: 0; margin: 0 0 8px 0; line-height: 1.25em;}
+
+h1 {font-size: 3.6em; letter-spacing: -.02em;}
+h2 {font-size: 2.8em; letter-spacing: -.02em; background: #ffff00; display: inline-block; padding: 5px 5px 3px 5px; line-height: 1.0em;}
+h3 {font-size: 2.4em; letter-spacing: -.02em;}
+h4 { letter-spacing: -.02em;}
+h5 { letter-spacing: -.02em;}
+h6 { letter-spacing: -.02em;}
+p, ul li, ol li, dl dt, dl dd {font-size: 1.6em; letter-spacing: -.02em;}
+a {display: inline-block; text-decoration: none; color: #000000;}
+a:hover {margin: -2px -2px -1px -2px; padding: 2px 2px 1px 2px; background-color: #ff00ff; color: #000000;}
+
+h3 .note {display: inline-block; padding: 0 1px; font-weight: normal; font-size: .67em; line-height: 1.0em;}
+
+.abs {position: absolute;}
+.rel {position: relative;}
+.c:after {content: "."; clear: both; display: block; visibility: hidden; height: 0;}
+.left {clear: none; float: left;}
+.right {clear: none; float: right;}
+.ta_c {text-align: center;}
+.ta_l {text-align: left;}
+.ta_r {text-align: right;}
+
+.hide {display: none;}
+.invis {visibility: hidden;}
+
+p.suggest {font-style: italic;}
+
+
+#container {padding: 50px 45px;}
+
+#content {padding: 8px 0 0 0;}
+#content .box {padding: 10px 0 30px 0;}
+#content .content {padding: 12px 0 0 30px;}
+#content .content .file {padding: 12px 0 0 0;}
+#content .content .file:first-child {padding: 0;}
+
+
+#content .file .status {margin: -3px 0 8px 0; width: 100%; min-width: 100%;}
+#content .file .status .bar {height: 57px; background: #ff00ff; min-width: 19px;}
+#content .file .status .pct {top: 15px; left: 10px; font-weight: bold; font-size: 3.2em; line-height: 1.0em;}
+
+#content #completed_seeds .file a:hover {margin: -3px -5px -2px -5px; padding: 3px 5px 2px 5px; background-color: #ff00ff; color: #000000;}
+#content #completed_seeds .file h3, #content #completed_seeds .file p {margin: 0;}
+
+#footer {padding-top: 16px;}
+#footer p {margin: 2px 0; font-size: 1.4em;}
+#footer a {border-bottom: 1px dotted #aaa;}
+#footer a:hover {margin: -2px -1px 0 -1px; padding: 2px 1px 0 1px; border-bottom: 1px solid #ff00ff;}
