@@ -1,14 +1,13 @@
-%h1 #{configatron.site_name} Admin Area
-
-%p
+#nav
   %a.button{:href => '/admin/connect'} Add a user
+  %a.button{:href => '/admin/queue'} Queue a file
 
-%dl
-  %dt Queue
+.box
+  %h2 Queue
   - unless @queue.blank?
     - @queue.each do |file|
-      %dd
-        %h6
+      .file
+        %h3
           %a{:href => "/admin/queue/#{file.id}"}= file.file.name
           - if file.cursor_length && file.cursor_position
             (#{sprintf("%.05f", (file.cursor_position/file.cursor_length.to_f)*100)}% complete)
@@ -20,4 +19,4 @@
           %a{:href => "/admin/users/#{file.user.id}"} @#{file.user.screen_name}
       
   - else
-    %dd.suggest There are no users.
+    %dd.suggest There are no files.

@@ -1,0 +1,30 @@
+#nav
+  %a.button{:href => '/admin/connect'} Add a user
+  %a.button{:href => '/admin/queue'} Queue a file
+
+.box
+  %h2 File List
+  - unless @files.blank?
+    %form{:action => '/admin/queue', :method => 'post'}
+      - @files.each do |file|
+        - p "*"*10
+        - p file.users
+        - queued = (file.users && file.users.size >= 1)
+        - status = queued ? 'Y' : 'N'
+
+        .file.c{:onclick => (queued ? '' : "var b = $('#file_#{file.id}_radio'); b.attr('checked') ? b.removeAttr('checked') :  b.attr('checked', 'checked');")}
+          .left.status{:class => "#{queued ? 'queued' : ''}"}
+            - if queued
+              %p= status
+            - else
+              %input{:id => "file_#{file.id}_radio", :type => 'radio', :name => 'file', :value => file.id}
+
+          .left
+            %h3
+              = file.name
+              %span.note (#{file_size(file.name)})
+      .buttons
+        %button Queue File
+    
+  - else
+    %p.suggest There are no files.

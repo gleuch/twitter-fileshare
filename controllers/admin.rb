@@ -106,11 +106,51 @@ end
 # Queue a file to pirate
 get '/admin/queue' do
   require_administrative_privileges
-  raise 'This page coming soon.'
+
+  # Check for new files
+  queued_files = (ShareFile.all.collect(&:name) || []).push('.', '..')
+
+  (Dir.entries(configatron.folder_path) || []).each do |f|
+    next if queued_files.include?(f)
+    p "#"*30
+    p f
+    file = ShareFile.new
+    file.attributes = {:name => f, :path => "#{configatron.folder_path.gsub(/\/$/, '')}/#{f}"}
+    file.save
+  end
+
+  @files = ShareFile.all(:order => [:name.asc]) rescue nil
+  @users = User.all(:order => [:screen_name.asc]) rescue nil
+
+  haml :'admin/files'
 end
 
 # Save queued file
-put '/admin/queue' do
+post '/admin/queue' do
   require_administrative_privileges
-  # raise 'This page coming soon.'
+
+  # @error ||= 'You must select a file.' if params[:file].nil? || params[:file] == ''
+  # @error ||= 'You must select a user.' if params[:user].nil? || params[:user] == ''
+
+  unless @error
+    @file = ShareFile.find(params[:file]) rescue nil
+    # @user = User.find(params[:user]) rescue nil
+    @file = ShareFile.first
+    @user = User.first
+
+    unless @file.nil? || @user.nil?
+      begin
+        userfile = UserFile.new
+        userfile.attributes = {:user_id => @user.id, :file_id => @file.id, :cursor_length => file_length(@file.name)}
+        userfile.save
+
+        # TODO : Add flash here...
+        redirect '/admin'
+      rescue
+      end
+    end
+  end
+
+  @error ||= 'Could not find file or user.'
+  haml :fail
 end

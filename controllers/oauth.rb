@@ -28,23 +28,23 @@ get '/admin/auth' do
   @title = 'Authenticate with Twitter'  
 
   unless params[:denied].blank?
-    # cache 'error/auth/denied', :expiry => 600, :compress => false do
-      @error = "We are sorry that you decided to not use #{configatron.site_name}. <a href=\"/\">Click</a> to return."
-      haml :fail
-    # end
+    @error = "We are sorry that you decided to not use #{configatron.site_name}. <a href=\"/\">Click</a> to return."
+    haml :fail
   else
     twitter_connect
     @access_token = @twitter_client.authorize(session[:request_token], session[:request_token_secret], :oauth_verifier => params[:oauth_verifier])
 
     if @twitter_client.authorized?
       begin
-        info = @twitter_client.info
+        info = @twitter_client.info rescue {}
       rescue
         return twitter_fail
       end
 
       @user = User.first_or_create(:account_id => info['id'])
-      @user.update_attributes(:active => true, :account_id => info['id'], :screen_name => info['screen_name'], :oauth_token => @access_token.token, :oauth_secret => @access_token.secret)
+      @user.attributes = {:active => true, :account_id => info['id'], :screen_name => info['screen_name'], :oauth_token => @access_token.token, :oauth_secret => @access_token.secret}
+      @user.save
+      
 
       # Set and clear session data
       session[:user], session[:account] = @user.id, @user.account_id

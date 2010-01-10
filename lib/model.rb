@@ -11,19 +11,19 @@ class User
   property :updated_at,       DateTime
 
   has n, :user_files
-  has n, :files, :through => :user_files
+  has n, :files, :through => :user_files, :model => 'ShareFile'
 end
 
-class File
+class ShareFile
   include DataMapper::Resource
 
   property :id,               Serial
   property :name,             String
-  property :path,             String
+  property :path,             Text
   property :created_at,       DateTime
   property :updated_at,       DateTime
 
-  has n, :user_files
+  has n, :user_files, :child_key => [:file_id]
   has n, :users, :through => :user_files
 end
 
@@ -43,7 +43,7 @@ class UserFile
   property :updated_at,       DateTime
 
   belongs_to :user
-  belongs_to :file
+  belongs_to :file, :model => 'ShareFile', :source_key => [:file_id]
 
 end
 
@@ -55,10 +55,10 @@ class Tweet
   property :tweet_message,    Text
   property :cursor_position,  Integer
   property :user_id,          Integer
-  property :file_id,          Integer
+  property :file_id,    Integer
   property :created_at,       DateTime
 
   belongs_to :user
-  belongs_to :file
+  belongs_to :file, :model => 'ShareFile', :source_key => [:file_id]
 
 end

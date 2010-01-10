@@ -12,12 +12,15 @@
     %script{:type => 'text/javascript', :src => '/js/application.js'}
 
   %body
-    #container
+    #container.rel
       %h1
-        %a{:href => '/'}= configatron.site_name
+        %a{:href => '/'} #{configatron.site_name} #{request.env['REQUEST_PATH'].match(/^\/admin/i) ? 'Admin Area' : ''}
 
       #content
         = yield
+
+      #bird.abs
+        %img{:src => '/images/twitter_bird.png', :title => configatron.site_name, :alt => ''}
 
       #footer
         %p Copyfree &amp; open-sourced by <a href='http://www.gleuch.com'>Greg Leuch</a>, <a href='http://www.theowatson.com'>Theo Watson</a>, and the <a href='http://www.fffff.at'>Free Art and Technology Lab</a>.

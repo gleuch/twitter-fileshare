@@ -51,11 +51,14 @@ helpers do
     return Digest::MD5.hexdigest(File.new(path).read) rescue false
   end
 
-  def file_size(file, dec=false)
+  def file_length(file)
     path = find_file(file)
     raise 'File not found.' unless path
+    File.size(path) rescue 0
+  end
 
-    size = File.size(path) rescue 0
+  def file_size(file, dec=false)
+    size = file_length(file)
     fsize, pwr = size, 0
 
     # Determine its power (i guess?)
