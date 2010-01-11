@@ -11,13 +11,13 @@ helpers do
     return 'Not started' unless file.started_at
     return 'Finished' if file.finished_at
 
-    pct_now = (file.cursor_position/file.cursor_length.to_f)*100
+    pct_now = (file.cursor_position/file.cursor_length.to_f)*100 rescue 0
 
     time_now = (Time.now.to_i - Time.parse(file.started_at.to_s).to_i)
     time_left = (time_now*100)/pct_now.to_f
     
-    str = Time.at(Time.now.to_i + time_left)
-    "#{str}"
+    time = Time.at(Time.now.to_i + time_left).getutc
+    "<span class='loctime' timestamp='#{time.iso8601}'>#{time}</span>"
   rescue
     "&#8734;"
   end
@@ -77,7 +77,7 @@ helpers do
       when 4; 'TB'
       when 3; 'GB'
       when 2; 'MB'
-      when 1; 'kB'
+      when 1; 'KB'
       else; 'B'
     end
 

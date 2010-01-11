@@ -9,17 +9,21 @@
     %link{:href => '/css/screen.css', :media => 'all', :rel => 'stylesheet', :type => 'text/css'}
     %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js'}
     %script{:type => 'text/javascript', :src => '/js/sprintf.js'}
+    %script{:type => 'text/javascript', :src => '/js/jquery.loctime.js'}
     %script{:type => 'text/javascript', :src => '/js/application.js'}
 
   %body
     #container.rel
       %h1
-        %a{:href => '/'} #{configatron.site_name} #{request.env['REQUEST_PATH'].match(/^\/admin/i) ? 'Admin Area' : ''}
+        - if request.env['REQUEST_PATH'].match(/^\/admin/i)
+          %a{:href => '/admin'} #{configatron.site_name} Admin Area
+        - else
+          %a{:href => '/'}= configatron.site_name
 
       #content
         = yield
 
-      #bird.abs
+      %a#bird.abs{:href => '/'}
         %img{:src => '/images/twitter_bird.png', :title => configatron.site_name, :alt => ''}
 
       #footer

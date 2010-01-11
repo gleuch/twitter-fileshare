@@ -1,30 +1,39 @@
-#nav
-  %a.button{:href => '/admin/connect'} Add a user
-  %a.button{:href => '/admin/queue'} Queue a file
+= partial('admin/nav')
 
 .box
-  %h2 File List
-  - unless @files.blank?
-    %form{:action => '/admin/queue', :method => 'post'}
-      - @files.each do |file|
-        - p "*"*10
-        - p file.users
-        - queued = (file.users && file.users.size >= 1)
-        - status = queued ? 'Y' : 'N'
+  %h2 Add a File
+  .content
+    - unless @files.blank? || @users.blank?
+      %form{:action => '/admin/queue', :method => 'post'}
 
-        .file.c{:onclick => (queued ? '' : "var b = $('#file_#{file.id}_radio'); b.attr('checked') ? b.removeAttr('checked') :  b.attr('checked', 'checked');")}
-          .left.status{:class => "#{queued ? 'queued' : ''}"}
-            - if queued
-              %p= status
-            - else
-              %input{:id => "file_#{file.id}_radio", :type => 'radio', :name => 'file', :value => file.id}
+        %h3 Users
+        - @users.each do |user|
+          .file.c
+            .left.select
+              %input{:id => "user_#{user.id}_radio", :type => 'radio', :name => 'user', :value => user.id}
 
-          .left
-            %h3
-              = file.name
-              %span.note (#{file_size(file.name)})
-      .buttons
-        %button Queue File
+            .left{:onclick => "var b = $('#user_#{user.id}_radio'); b.attr('checked') ? b.removeAttr('checked') :  b.attr('checked', 'checked');"}
+              %h4= user.screen_name || user.account_id
+      
+        %h3 Files
+        - @files.each do |file|
+          - queued = (file.users && file.users.size >= 1)
+          - status = queued ? 'Y' : 'N'
+
+          .file.c
+            .left.select{:class => "#{queued ? 'queued' : ''}"}
+              - if queued
+                %p= status
+              - else
+                %input{:id => "file_#{file.id}_radio", :type => 'radio', :name => 'file', :value => file.id}
+
+            .left{:onclick => (queued ? '' : "var b = $('#file_#{file.id}_radio'); b.attr('checked') ? b.removeAttr('checked') :  b.attr('checked', 'checked');")}
+              %h4
+                = file.name
+                %span.note (#{file_size(file.name)})
+
+        %p
+          %button Queue File
     
-  - else
-    %p.suggest There are no files.
+    - else
+      %p.suggest There are no #{@users.blank? ? 'users' : 'files'} to choose from.

@@ -65,12 +65,13 @@ helpers do
     elsif object = options.delete(:object)
       partial(name, options.merge(:locals => {item_name => object, counter_name => nil}))
     else
+      path, file = name.gsub(/^(.*\/)([A-Z0-9_\-\.]+)$/i, '\1'), name.gsub(/^(.*\/)([A-Z0-9_\-\.]+)$/i, '\2')
       # unless options[:cache].blank?
       #   cache "_#{name}", :expiry => (options[:cache_expiry].blank? ? 300 : options[:cache_expiry]), :compress => false do
       #     haml "_#{name}".to_sym, options.merge(:layout => false)
       #   end
       # else
-        haml "_#{name}".to_sym, options.merge(:layout => false)
+        haml "#{path}_#{file}".to_sym, options.merge(:layout => false)
       # end
     end
   end

@@ -17,16 +17,15 @@ get '/admin/run' do
   require_administrative_privileges
 
   @users = User.all
-  
   @users.each do |user|
-    STDERR.puts "User: #{user.screen_name}..."
+    # STDERR.puts "User: #{user.screen_name}..."
     userfile = user.user_files.first(:order => [:started_at.asc, :created_at.asc], :conditions => ['finished_at IS NULL']) rescue nil
     next if userfile.nil? || userfile.file.nil? # Assume that user has no files queued.
 
     file = userfile.file
-    STDERR.puts "File: #{file.name}..."
+    # STDERR.puts "File: #{file.name}..."
 
-    # begin
+    begin
       twitter_connect(user)
 
       if userfile.started_at.nil?
@@ -35,6 +34,7 @@ get '/admin/run' do
 
         if info && (info['id'].to_s || '').match(/\d+/)
           userfile.update(:started_at => Time.now)
+          (@success ||= []) << "Sent BOF tweet to #{user.screen_name}."
         else
           (@errors ||= []) << "Could not sent BOF tweet to #{user.screen_name}."
         end
@@ -50,30 +50,32 @@ get '/admin/run' do
         if info && (info['id'].to_s || '').match(/\d+/)
           userfile.update(:active => true, :cursor_position => tweet[:cursor])
           Tweet.new(:tweet_id => info['id'], :tweet_message => tweet[:msg], :cursor_position => tweet[:cursor], :user_id => user.id, :file_id => file.id)
+          (@success ||= []) << "Sent seed tweet to #{user.screen_name}."
         else
           (@errors ||= []) << "Could not sent tweet to #{user.screen_name}."
         end
-         
+       
       # Otherwise, asssume it is the end of the file.
       else
         md5 = md5_file(file.name)
         info = @twitter_client.update("End of file: #{file.name} (MD5: #{md5})")
         if info && (info['id'].to_s || '').match(/\d+/)
           userfile.update(:finished_at => Time.now)
+          (@success ||= []) << "Sent EOF tweet to #{user.screen_name}."
         else
           (@errors ||= []) << "Could not sent EOF tweet to #{user.screen_name}."
         end
       end
-    # rescue
-    #   (@errors ||= []) << "There was an error sending a file for @#{user.screen_name}."
-    # end
+    rescue
+      (@errors ||= []) << "<strong>There was an error sending a file for @#{user.screen_name}.</strong>"
+    end
   end
 
 
-  @error = @errors.join('<br />') rescue nil
-  @error ||= 'This page coming soon.'
+  @errors = @errors.join('<br />') rescue nil
+  @success = @success.join('<br />') rescue nil
 
-  haml :fail
+  haml :'admin/run'
 end
 
 
@@ -103,8 +105,16 @@ delete '/admin/queue/:id' do
   raise 'This page coming soon.'
 end
 
-# Queue a file to pirate
+# View current queue
 get '/admin/queue' do
+  require_administrative_privileges
+
+  @queue = UserFile.all(:conditions => ["finished_at IS NULL AND active=?", true], :order => [:started_at.asc]) rescue nil
+  haml :'admin/queue'
+end
+
+# Add a file to pirate
+get '/admin/files' do
   require_administrative_privileges
 
   # Check for new files
@@ -112,15 +122,13 @@ get '/admin/queue' do
 
   (Dir.entries(configatron.folder_path) || []).each do |f|
     next if queued_files.include?(f)
-    p "#"*30
-    p f
     file = ShareFile.new
     file.attributes = {:name => f, :path => "#{configatron.folder_path.gsub(/\/$/, '')}/#{f}"}
     file.save
   end
 
   @files = ShareFile.all(:order => [:name.asc]) rescue nil
-  @users = User.all(:order => [:screen_name.asc]) rescue nil
+  @users = User.seeders.all(:order => [:screen_name.asc]) rescue nil
 
   haml :'admin/files'
 end
@@ -129,25 +137,24 @@ end
 post '/admin/queue' do
   require_administrative_privileges
 
-  # @error ||= 'You must select a file.' if params[:file].nil? || params[:file] == ''
-  # @error ||= 'You must select a user.' if params[:user].nil? || params[:user] == ''
+  @error ||= 'You must select a file.' if params[:file].nil? || params[:file] == ''
+  @error ||= 'You must select a user.' if params[:user].nil? || params[:user] == ''
 
   unless @error
+    p params
     @file = ShareFile.find(params[:file]) rescue nil
-    # @user = User.find(params[:user]) rescue nil
-    @file = ShareFile.first
-    @user = User.first
+    @user = User.find(params[:user]) rescue nil
 
     unless @file.nil? || @user.nil?
       begin
-        userfile = UserFile.new
-        userfile.attributes = {:user_id => @user.id, :file_id => @file.id, :cursor_length => file_length(@file.name)}
+        userfile = UserFile.first_or_new(:user_id => @user.id, :file_id => @file.id)
+        userfile.attributes = {:cursor_length => file_length(@file.name)}
+        userfile.active = true if userfile.new?
         userfile.save
 
         # TODO : Add flash here...
         redirect '/admin'
-      rescue
-      end
+      rescue; end
     end
   end
 

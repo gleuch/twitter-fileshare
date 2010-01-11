@@ -1,0 +1,12 @@
+= partial('admin/nav')
+
+.box
+  %h2 File Seed Status
+  .content
+    - unless @errors.blank?
+      %h3 Errors
+      %p= @errors
+
+    - unless @success.blank?
+      %h3 Success
+      %p= @success
