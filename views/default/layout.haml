@@ -15,7 +15,7 @@
   %body
     #container.rel
       %h1
-        - if request.env['REQUEST_PATH'].match(/^\/admin/i)
+        - if (request.env['REQUEST_PATH'] || request.env['REQUEST_URI'] || '').match(/^\/admin/i)
           %a{:href => '/admin'} #{configatron.site_name} Admin Area
         - else
           %a{:href => '/'}= configatron.site_name
