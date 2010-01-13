@@ -45,7 +45,7 @@ get '/admin/run' do
       tweet = read_from_file(file, (userfile.cursor_position || 0))
 
       # Start tweet if there is something to tweet.
-      unless tweet[:msg].blank?
+      unless tweet.blank? || tweet[:msg].blank?
         info = @twitter_client.update(tweet[:msg].to_s)
         if info && (info['id'].to_s || '').match(/\d+/)
           userfile.update(:active => true, :cursor_position => tweet[:cursor])
@@ -67,7 +67,7 @@ get '/admin/run' do
         end
       end
     rescue
-      (@errors ||= []) << "<strong>There was an error sending a file for @#{user.screen_name}.</strong>"
+      (@errors ||= []) << "<strong>#{$! || "There was an error sending a file"} for @#{user.screen_name}.</strong>"
     end
   end
 
