@@ -141,9 +141,8 @@ post '/admin/queue' do
   @error ||= 'You must select a user.' if params[:user].nil? || params[:user] == ''
 
   unless @error
-    p params
-    @file = ShareFile.find(params[:file]) rescue nil
-    @user = User.find(params[:user]) rescue nil
+    @file = ShareFile.first(:id => params[:file]) rescue nil
+    @user = User.first(:id => params[:user]) rescue nil
 
     unless @file.nil? || @user.nil?
       begin
@@ -158,6 +157,7 @@ post '/admin/queue' do
     end
   end
 
+  @error ||= $!
   @error ||= 'Could not find file or user.'
   haml :fail
 end
