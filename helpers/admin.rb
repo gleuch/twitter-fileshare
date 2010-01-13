@@ -31,13 +31,17 @@ helpers do
     fr = File.new(path)
     fr.seek(cursor, IO::SEEK_SET) # Move to position.
     fragment = fr.read(160) # Get out at least enough for a tweet.
-    fragment.each_byte do |b|
-      s = " #{b.to_s}"
-      break if (str.length + s.length) >= 140 # Twitter length, do not cross.
-      str << s; incr += 1
-    end
+    unless fragment.blank?
+      fragment.each_byte do |b|
+        s = " #{b.to_s}"
+        break if (str.length + s.length) >= 140 # Twitter length, do not cross.
+        str << s; incr += 1
+      end
 
-    return {:msg => str, :cursor => (cursor+incr)}
+      return {:msg => str, :cursor => (cursor+incr)}
+    else
+      return false
+    end
   end
 
   def find_file(file)
