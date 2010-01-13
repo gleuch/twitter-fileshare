@@ -4,7 +4,7 @@
 get '/' do
   # cache "homepage/#{@user.blank? ? 'guest' : 'user'}", :expiry => 600, :compress => true do
     @current_files = UserFile.all(:conditions => ["finished_at IS NULL AND active=?", true], :order => [:started_at.asc]) rescue nil
-    @completed_files = UserFile.all(:conditions => ["finished_at IS NOT NULL AND active=?", false], :order => [:finished_at.desc]) rescue nil
+    @completed_files = UserFile.all(:conditions => ["finished_at IS NOT NULL AND active=?", true], :order => [:finished_at.desc]) rescue nil
 
     first_file = @current_files[0] || @completed_files[0] || nil
     if first_file && !dev?
@@ -19,7 +19,7 @@ end
 get '/leech/:id' do
   @file = UserFile.first(:id => params[:id]) rescue nil
   unless @file.blank?
-    if @file.finished_at == nil || @file.active
+    if @file.finished_at == nil || !@file.active
       @error = 'This file has not finished seeding to Twitter.'
     else
       haml :'public/leech'
