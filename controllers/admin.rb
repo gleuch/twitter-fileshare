@@ -19,7 +19,7 @@ get '/admin/run' do
   @users = User.all
   @users.each do |user|
     # STDERR.puts "User: #{user.screen_name}..."
-    userfile = user.user_files.first(:order => [:started_at.asc, :created_at.asc], :conditions => ['finished_at IS NULL']) rescue nil
+    userfile = UserFile.first(:order => [:started_at.asc, :created_at.asc], :conditions => ['finished_at IS NULL AND user_id=?', user.id]) rescue nil
     next if userfile.nil? || userfile.file.nil? # Assume that user has no files queued.
 
     file = userfile.file
@@ -48,8 +48,8 @@ get '/admin/run' do
       unless tweet.blank? || tweet[:msg].blank?
         info = @twitter_client.update(tweet[:msg].to_s)
         if info && (info['id'].to_s || '').match(/\d+/)
-          userfile.update(:active => true, :cursor_position => tweet[:cursor])
-          Tweet.new(:tweet_id => info['id'], :tweet_message => tweet[:msg], :cursor_position => tweet[:cursor], :user_id => user.id, :file_id => file.id)
+          userfile.update(:active => true, :cursor_position => tweet[:cursor], :tweet_count => ((userfile.tweet_count || 0)+1) )
+          # Tweet.new(:tweet_id => info['id'], :tweet_message => tweet[:msg], :cursor_position => tweet[:cursor], :user_id => user.id, :file_id => file.id)
           (@success ||= []) << "Sent seed tweet to #{user.screen_name}."
         else
           (@errors ||= []) << "Could not sent tweet to #{user.screen_name}."

@@ -39,11 +39,12 @@ class UserFile
   property :id,               Serial
   property :user_id,          Integer
   property :file_id,          Integer
-  property :cursor_position,  Integer, :nullable => true
-  property :cursor_length,    Integer, :nullable => true
+  property :cursor_position,  Integer, :required =>false
+  property :cursor_length,    Integer, :required =>false
+  property :tweet_count,      Integer, :required =>false
   property :active,           Boolean
-  property :started_at,       DateTime, :nullable => true
-  property :finished_at,      DateTime, :nullable => true
+  property :started_at,       DateTime, :required =>false
+  property :finished_at,      DateTime, :required =>false
   property :created_at,       DateTime
   property :updated_at,       DateTime
 

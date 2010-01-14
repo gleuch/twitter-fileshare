@@ -3,12 +3,27 @@
 helpers do
   include Sinatra::Authorization
 
+  def tweets_left(file)
+    # Assume 1 tweet per minute.
+    return 'Unknown' unless file.cursor_position && file.cursor_length
+    return 'Paused' unless file.active
+    return 'Not started' unless file.started_at
+    return 'Calculating&hellip;' unless file.tweet_count > 3
+    return 'Finished' if file.finished_at
+    
+    total = ((file.tweet_count * file.cursor_length ) / file.cursor_position.to_f).ceil
+
+    "#{file.tweet_count} of about #{total}"
+  # rescue
+  #   "&#8734;"
+  end
 
   def file_time_left(file)
     # Assume 1 tweet per minute.
     return 'Unknown' unless file.cursor_position && file.cursor_length
     return 'Paused' unless file.active
     return 'Not started' unless file.started_at
+    return 'Calculating&hellip;' unless file.tweet_count > 3
     return 'Finished' if file.finished_at
 
     pct_now = (file.cursor_position/file.cursor_length.to_f)*100 rescue 0

@@ -33,6 +33,8 @@
           %p
             Time remaining: #{file_time_left(file)}
             &nbsp;&nbsp;/&nbsp;&nbsp;
+            Tweets: #{tweets_left(file)}
+            &nbsp;&nbsp;/&nbsp;&nbsp;
             %a{:href => "http://www.twitter.com/#{file.user.screen_name}"} Follow @#{file.user.screen_name}
 
     - else
