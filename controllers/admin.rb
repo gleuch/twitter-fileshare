@@ -19,7 +19,7 @@ get '/admin/run' do
   @users = User.all
   @users.each do |user|
     # STDERR.puts "User: #{user.screen_name}..."
-    userfile = UserFile.first(:order => [:started_at.asc, :created_at.asc], :conditions => ['finished_at IS NULL AND user_id=?', user.id]) rescue nil
+    userfile = UserFile.first(:order => [:created_at.asc, :started_at.asc], :conditions => ['finished_at IS NULL AND user_id=?', user.id]) rescue nil
     next if userfile.nil? || userfile.file.nil? # Assume that user has no files queued.
 
     file = userfile.file
@@ -30,9 +30,9 @@ get '/admin/run' do
 
       if userfile.started_at.nil?
         md5 = md5_file(file.name)
-        info = @twitter_client.update("New file: #{file.name} (MD5: #{md5})")
+        info = dev? ? false : @twitter_client.update("New file: #{file.name} (MD5: #{md5})")
 
-        if info && (info['id'].to_s || '').match(/\d+/)
+        if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
           userfile.update(:started_at => Time.now)
           (@success ||= []) << "Sent BOF tweet to #{user.screen_name}."
         else
@@ -46,10 +46,11 @@ get '/admin/run' do
 
       # Start tweet if there is something to tweet.
       unless tweet.blank? || tweet[:msg].blank?
-        info = @twitter_client.update(tweet[:msg].to_s)
-        if info && (info['id'].to_s || '').match(/\d+/)
+        info = dev? ? false : @twitter_client.update(tweet[:msg].to_s)
+
+        if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
           userfile.update(:active => true, :cursor_position => tweet[:cursor], :tweet_count => ((userfile.tweet_count || 0)+1) )
-          # Tweet.new(:tweet_id => info['id'], :tweet_message => tweet[:msg], :cursor_position => tweet[:cursor], :user_id => user.id, :file_id => file.id)
+          Tweet.first_or_create.update(:tweet_id => ((info && info['id']) || 0), :tweet_message => tweet[:msg].to_s, :cursor_position => tweet[:cursor], :user_id => user.id, :file_id => file.id)
           (@success ||= []) << "Sent seed tweet to #{user.screen_name}."
         else
           (@errors ||= []) << "Could not sent tweet to #{user.screen_name}."
@@ -58,8 +59,9 @@ get '/admin/run' do
       # Otherwise, asssume it is the end of the file.
       else
         md5 = md5_file(file.name)
-        info = @twitter_client.update("End of file: #{file.name} (MD5: #{md5})")
-        if info && (info['id'].to_s || '').match(/\d+/)
+        info = dev? ? false : @twitter_client.update("End of file: #{file.name} (MD5: #{md5})")
+
+        if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
           userfile.update(:finished_at => Time.now)
           (@success ||= []) << "Sent EOF tweet to #{user.screen_name}."
         else
@@ -120,14 +122,9 @@ get '/admin/files' do
   # Check for new files
   queued_files = (ShareFile.all.collect(&:name) || []).push('.', '..')
 
-  (Dir.entries(configatron.folder_path) || []).each do |f|
-    next if queued_files.include?(f)
-    file = ShareFile.new
-    file.attributes = {:name => f, :path => "#{configatron.folder_path.gsub(/\/$/, '')}/#{f}"}
-    file.save
-  end
+  @files = (Dir.entries(configatron.folder_path) || []).reject{|f| queued_files.include?(f)}
+  # @files = ShareFile.all(:order => [:name.asc]) rescue nil
 
-  @files = ShareFile.all(:order => [:name.asc]) rescue nil
   @users = User.seeders.all(:order => [:screen_name.asc]) rescue nil
 
   haml :'admin/files'
@@ -137,11 +134,13 @@ end
 post '/admin/queue' do
   require_administrative_privileges
 
-  @error ||= 'You must select a file.' if params[:file].nil? || params[:file] == ''
+  # @error ||= 'You must select a file.' if params[:file].nil? || params[:file] == ''
   @error ||= 'You must select a user.' if params[:user].nil? || params[:user] == ''
+  @error ||= 'You must select a file.' unless find_file(params[:file])
 
   unless @error
-    @file = ShareFile.first(:id => params[:file]) rescue nil
+    @file = ShareFile.create(:name => params[:file], :path => "#{configatron.folder_path.gsub(/\/$/, '')}/#{params[:file]}")
+    # @file = ShareFile.first(:id => params[:file]) rescue nil
     @user = User.first(:id => params[:user]) rescue nil
 
     unless @file.nil? || @user.nil?

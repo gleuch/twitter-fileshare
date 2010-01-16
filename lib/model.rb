@@ -63,6 +63,7 @@ class Tweet
   property :user_id,          Integer
   property :file_id,    Integer
   property :created_at,       DateTime
+  property :updated_at,       DateTime
 
   belongs_to :user
   belongs_to :file, :model => 'ShareFile'

@@ -55,6 +55,13 @@ dl#nav dt.first {margin: -2px 8px 0 2px; font-size: 2.0em;}
 #content #completed_seeds .file a:hover {margin: -3px -5px -2px -5px; padding: 3px 5px 2px 5px; background-color: #28a0c6; color: #333333;}
 #content #completed_seeds .file h3, #content #completed_seeds .file p {margin: 0;}
 
+#content form h3 {margin: 4px 0;}
+#content .form.file {padding: 6px 0 0 0;}
+#content .form.file:hover {background: #c1e7f0; cursor: pointer;}
+#content .form.file .select {padding: 3px 10px 0 10px;}
+#content .form.file h4 {font-size: 1.6em;}
+#content p.buttons {padding: 8px 0 0 0;;}
+
 #footer {padding-top: 16px;}
 #footer p {margin: 2px 0; font-size: 1.4em;}
 #footer a {border-bottom: 1px dotted #aaa;}

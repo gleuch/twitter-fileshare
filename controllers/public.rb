@@ -5,12 +5,7 @@ get '/' do
   # cache "homepage/#{@user.blank? ? 'guest' : 'user'}", :expiry => 600, :compress => true do
     @current_files = UserFile.all(:conditions => ["finished_at IS NULL AND active=?", true], :order => [:started_at.asc]) rescue nil
     @completed_files = UserFile.all(:conditions => ["finished_at IS NOT NULL AND active=?", true], :order => [:finished_at.desc]) rescue nil
-
-    first_file = @current_files[0] || @completed_files[0] || nil
-    if first_file && !dev?
-      twitter_connect(first_file.user)
-      @tweet = @twitter_client.info
-    end
+    @tweet = Tweet.first(:order => [:updated_at.desc]) rescue nil
 
     haml :'public/home'
   # end

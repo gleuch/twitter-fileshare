@@ -2,6 +2,8 @@
 
 .box
   %h2 File Seed Status
+  - if dev?
+    %p.suggest Running in development mode. Tweets will not be sent to Twitter.
   .content
     - unless @errors.blank?
       %h3 Errors

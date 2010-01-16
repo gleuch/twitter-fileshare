@@ -8,7 +8,7 @@
 
         %h3 Users
         - @users.each do |user|
-          .file.c
+          .file.form.c
             .left.select
               %input{:id => "user_#{user.id}_radio", :type => 'radio', :name => 'user', :value => user.id}
 
@@ -16,23 +16,17 @@
               %h4= user.screen_name || user.account_id
       
         %h3 Files
-        - @files.each do |file|
-          - queued = (file.users && file.users.size >= 1)
-          - status = queued ? 'Y' : 'N'
+        - @files.each_with_index do |file, i|
+          .file.form.c
+            .left.select
+              %input{:id => "file_#{i}_radio", :type => 'radio', :name => 'file', :value => file}
 
-          .file.c
-            .left.select{:class => "#{queued ? 'queued' : ''}"}
-              - if queued
-                %p= status
-              - else
-                %input{:id => "file_#{file.id}_radio", :type => 'radio', :name => 'file', :value => file.id}
-
-            .left{:onclick => (queued ? '' : "var b = $('#file_#{file.id}_radio'); b.attr('checked') ? b.removeAttr('checked') :  b.attr('checked', 'checked');")}
+            .left{:onclick => "var b = $('#file_#{i}_radio'); b.attr('checked') ? b.removeAttr('checked') :  b.attr('checked', 'checked');"}
               %h4
-                = file.name
-                %span.note (#{file_size(file.name)})
+                = file
+                %span.note (#{file_size(file)})
 
-        %p
+        %p.buttons
           %button Queue File
     
     - else

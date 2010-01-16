@@ -1,20 +1,21 @@
 #latest_tweet.box
   %h2 Latest Tweet
   .content
-    - if false
-      - unless @tweet.blank?
-        - p @tweet
-        .tweet
-          %h3= @tweet['status']['text'] rescue 'Could not load tweet&hellip;'
-          %p
-            %a{:href => "http://www.twitter.com/#{@tweet['screen_name']}/statuses/#{@tweet['status']['id']}"} View Tweet
+    - unless @tweet.blank?
+      - user_file = @tweet.file.user_files.first(:user_id => @tweet.user.id, :file_id => @tweet.file.id) rescue nil
+      .tweet
+        %h3= @tweet.tweet_message rescue 'Could not load tweet&hellip;'
+        %h6 
+        %p
+          - if user_file
+            Tweet ##{user_file.tweet_count} for #{@tweet.file.name}
             &nbsp;&nbsp;/&nbsp;&nbsp;
-            %a{:href => "http://www.twitter.com/#{@tweet['screen_name']}"} Follow @#{@tweet['screen_name']}
+          %a{:href => "http://www.twitter.com/#{@tweet.user.screen_name}/statuses/#{@tweet.tweet_id}"} View Tweet
+          &nbsp;&nbsp;/&nbsp;&nbsp;
+          %a{:href => "http://www.twitter.com/#{@tweet.user.screen_name}"} Follow @#{@tweet.user.screen_name}
 
-      - else
-        %p.suggest #{configatron.site_name} has not tweeted yet. OH MY!
     - else
-      %p.suggest [TODO :: IMPLEMENT TWEET]
+      %p.suggest #{configatron.site_name} has not tweeted yet. OH MY!
 
 
 #current_seeds.box
