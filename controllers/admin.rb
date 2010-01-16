@@ -36,7 +36,7 @@ get '/admin/run' do
           userfile.update(:started_at => Time.now)
           (@success ||= []) << "Sent BOF tweet to #{user.screen_name}."
         else
-          (@errors ||= []) << "Could not sent BOF tweet to #{user.screen_name}."
+          (@errors ||= []) << "Could not sent BOF tweet to #{user.screen_name}. (#{(info && info['error']) || 'Unknown Error'})"
         end
 
         sleep 5 # Slow us down for a sec
@@ -46,14 +46,14 @@ get '/admin/run' do
 
       # Start tweet if there is something to tweet.
       unless tweet.blank? || tweet[:msg].blank?
-        info = dev? ? false : @twitter_client.update(tweet[:msg].to_s)
+        info = dev? ? false : @twitter_client.update("New file: #{file.name} (MD5: #{md5})")
 
         if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
           userfile.update(:active => true, :cursor_position => tweet[:cursor], :tweet_count => ((userfile.tweet_count || 0)+1) )
           Tweet.first_or_create.update(:tweet_id => ((info && info['id']) || 0), :tweet_message => tweet[:msg].to_s, :cursor_position => tweet[:cursor], :user_id => user.id, :file_id => file.id)
           (@success ||= []) << "Sent seed tweet to #{user.screen_name}."
         else
-          (@errors ||= []) << "Could not sent tweet to #{user.screen_name}."
+          (@errors ||= []) << "Could not sent tweet to #{user.screen_name}. (#{(info && info['error']) || 'Unknown Error'})"
         end
        
       # Otherwise, asssume it is the end of the file.
@@ -65,7 +65,7 @@ get '/admin/run' do
           userfile.update(:finished_at => Time.now)
           (@success ||= []) << "Sent EOF tweet to #{user.screen_name}."
         else
-          (@errors ||= []) << "Could not sent EOF tweet to #{user.screen_name}."
+          (@errors ||= []) << "Could not sent EOF tweet to #{user.screen_name}. (#{(info && info['error']) || 'Unknown Error'})"
         end
       end
     rescue
