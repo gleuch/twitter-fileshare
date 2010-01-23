@@ -46,7 +46,7 @@ get '/admin/run' do
 
       # Start tweet if there is something to tweet.
       unless tweet.blank? || tweet[:msg].blank?
-        info = dev? ? false : @twitter_client.update("New file: #{file.name} (MD5: #{md5})")
+        info = dev? ? false : @twitter_client.update(tweet[:msg].to_s)
 
         if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
           userfile.update(:active => true, :cursor_position => tweet[:cursor], :tweet_count => ((userfile.tweet_count || 0)+1) )
