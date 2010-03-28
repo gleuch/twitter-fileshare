@@ -4,7 +4,7 @@ body {background: #f0f9fb url(../images/bg.png) top left repeat-x; font-family: 
 h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd, dt, li, code, pre, q, blockquote {clear: both; display: block; vertical-align: top; line-height: 1.0em; color: #333333;}
 h1, h2, h3, h4, h5, h6, p {font-family: Helvetica, Arial, Verdana, sans-serif; padding: 0; margin: 0 0 8px 0; line-height: 1.25em;}
 
-h1 {font-size: 3.6em; letter-spacing: -.02em;}
+h1 {font-size: 3.6em; letter-spacing: -.02em; line-height: 1.0em;}
 h2 {font-size: 2.8em; letter-spacing: -.02em; background: #89d9ed; display: inline-block; padding: 5px 5px 3px 5px; line-height: 1.0em;}
 h3 {font-size: 2.4em; letter-spacing: -.02em;}
 h4 {font-size: 2.0em; letter-spacing: -.02em;}
@@ -15,6 +15,10 @@ a {display: inline-block; text-decoration: none; color: #333333;}
 a:hover {margin: -2px -2px -1px -2px; padding: 2px 2px 1px 2px; background-color: #89d9ed; color: #333333;}
 a img {border: none;}
 
+a.line {border-bottom: 1px dotted #aaa;}
+a.line:hover {margin: -2px -1px 0 -1px; padding: 2px 1px 0 1px; border-bottom: 1px solid #89d9ed;}
+
+h1 small {display: inline; font-size: 0.56em; font-weight: normal; line-height: 1.0em; margin: 0; padding: 0;}
 h3 .note {display: inline-block; padding: 0 1px; font-weight: normal; font-size: .67em; line-height: 1.0em;}
 
 .abs {position: absolute;}
@@ -40,6 +44,8 @@ dl#nav dt.first {margin: -2px 8px 0 2px; font-size: 2.0em;}
 
 #container a#bird {top: 15px; right: 28px; width: 129px; height: 110px;}
 #container a#bird:hover {background: none;}
+#container a#bird img {background: url(../images/twitter_bird_motion.png) 0 0 no-repeat; width: 129px; height: 110px;}
+#container a#bird.flap img {background-position: 0 -110px;}
 
 #content {padding: 8px 0 0 0;}
 #content .box {padding: 10px 0 30px 0;}
@@ -62,6 +68,7 @@ dl#nav dt.first {margin: -2px 8px 0 2px; font-size: 2.0em;}
 #content .form.file h4 {font-size: 1.6em;}
 #content p.buttons {padding: 8px 0 0 0;}
 
+#about.box {padding-top: 24px;}
 #about p a {text-decoration: underline;}
 
 #footer {padding-top: 16px;}

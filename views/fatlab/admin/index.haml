@@ -1,0 +1,24 @@
+= partial('admin/nav')
+
+.box
+  %h2 Queue
+  .content
+    - unless @queue.blank?
+      - @queue.each do |file|
+        .file
+          %h3
+            %a{:href => "/admin/queue/#{file.id}"}= file.file.name
+          %p
+            - if file.cursor_length && file.cursor_position
+              - pct = (file.cursor_position/file.cursor_length.to_f)*100 rescue 0
+              #{sprintf("%.02f", pct)}% complete
+              &nbsp;&nbsp;/&nbsp;&nbsp;
+              Time remaining: #{file_time_left(file)}
+            - else
+              0% complete
+            &nbsp;&nbsp;/&nbsp;&nbsp;
+            Queued by
+            %a{:href => "/admin/users/#{file.user.id}"} @#{file.user.screen_name}
+      
+    - else
+      %dd.suggest There are no files.

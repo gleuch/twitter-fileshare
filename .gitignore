@@ -1,3 +1,5 @@
+._*
+.DS_Store
 settings.yml
 retweet.db
 config.ru

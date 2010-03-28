@@ -1,0 +1,47 @@
+#leech_seed.box
+  %h2 Fetching From Twitter&hellip;
+  .content
+    - unless @file.blank?
+      - speed = 2.22 # Maybe more variable later
+      - time = Time.now.to_i + 15 / 2.to_f
+      - size = file_size(@file.file.name, true)
+      - fsize = file_size(@file.file.name)
+
+      .file
+        %h3
+          = @file.file.name
+          %span.note (#{file_size(@file.file.name)})
+        #file_status.status.rel.c
+          .pct.abs 0.00%
+          .bar{:style => "width: 0%;"} &nbsp;
+        %p.size_pct
+          Fetching 0.00 of #{fsize}
+
+        %script{:type => 'text/javascript'}
+          $(document).ready(function() {
+          var download_pct = 0, download_intv = setInterval(function() {
+
+          var file_amount = sprintf("%.02f", (download_pct > 100 ? 100 : download_pct));
+          var file_size = sprintf("%.01f", (#{size} * (download_pct/100)));
+          if (file_size > #{size}) file_size = #{size};
+
+          $('#file_status .bar').css({'width':Math.floor(file_amount)+'%'});
+          $('#file_status .pct').html(file_amount+'%');
+          $('#leech_seed p.size_pct').html('Fetching '+ file_size +' of #{fsize}');
+
+          if (download_pct >= 100) {
+          clearInterval(download_intv);
+
+          /* Blinkie blink... */
+          setTimeout(function() {$('#leech_seed p.size_pct').animate({'opacity':'0'}, 150, function() {$(this).html('<a href="/download/#{@file.id}?uid=#{time.ceil}"><strong>Download Now!</strong></a>').animate({'opacity':'1'}, 250, function() {$(this).animate({'opacity':'0'}, 250, function() {$(this).animate({'opacity':'1'}, 250);});});});}, 250);
+
+          } else {
+          download_pct = download_pct + #{speed};
+          }
+
+          }, 100);
+
+          });
+
+    - else
+      %p.suggest Could not find file.

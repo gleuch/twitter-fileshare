@@ -103,4 +103,65 @@ helpers do
     return "#{num} #{ending}"
   end
 
+
+
+  def run_seeder
+    @users = User.all
+    @users.each do |user|
+      # STDERR.puts "User: #{user.screen_name}..."
+      userfile = UserFile.first(:order => [:created_at.asc, :started_at.asc], :conditions => ['finished_at IS NULL AND user_id=?', user.id]) rescue nil
+      next if userfile.nil? || userfile.file.nil? # Assume that user has no files queued.
+
+      file = userfile.file
+      # STDERR.puts "File: #{file.name}..."
+
+      begin
+        twitter_connect(user)
+
+        if userfile.started_at.nil?
+          md5 = md5_file(file.name)
+          info = dev? ? false : @twitter_client.update("New file: #{file.name} (MD5: #{md5})")
+
+          if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
+            userfile.update(:started_at => Time.now)
+            (@success ||= []) << "Sent BOF tweet to #{user.screen_name}."
+          else
+            (@errors ||= []) << "Could not sent BOF tweet to #{user.screen_name}. (#{(info && info['error']) || 'Unknown Error'})"
+          end
+
+          sleep 5 # Slow us down for a sec
+        end
+
+        tweet = read_from_file(file, (userfile.cursor_position || 0))
+
+        # Start tweet if there is something to tweet.
+        unless tweet.blank? || tweet[:msg].blank?
+          info = dev? ? false : @twitter_client.update(tweet[:msg].to_s)
+
+          if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
+            userfile.update(:active => true, :cursor_position => tweet[:cursor], :tweet_count => ((userfile.tweet_count || 0)+1) )
+            Tweet.first_or_create.update(:tweet_id => ((info && info['id']) || 0), :tweet_message => tweet[:msg].to_s, :cursor_position => tweet[:cursor], :user_id => user.id, :file_id => file.id)
+            (@success ||= []) << "Sent seed tweet to #{user.screen_name}."
+          else
+            (@errors ||= []) << "Could not sent tweet to #{user.screen_name}. (#{(info && info['error']) || 'Unknown Error'})"
+          end
+
+        # Otherwise, asssume it is the end of the file.
+        else
+          md5 = md5_file(file.name)
+          info = dev? ? false : @twitter_client.update("End of file: #{file.name} (MD5: #{md5})")
+
+          if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
+            userfile.update(:finished_at => Time.now)
+            (@success ||= []) << "Sent EOF tweet to #{user.screen_name}."
+          else
+            (@errors ||= []) << "Could not sent EOF tweet to #{user.screen_name}. (#{(info && info['error']) || 'Unknown Error'})"
+          end
+        end
+      rescue
+        (@errors ||= []) << "<strong>#{$! || "There was an error sending a file"} for @#{user.screen_name}.</strong>"
+      end
+    end
+  end
+
 end

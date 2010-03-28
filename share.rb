@@ -5,7 +5,6 @@ require 'rubygems'
 require 'sinatra'
 
 
-
 configure :development do
   # set :raise_errors, Proc.new { false }
   # set :show_exceptions, false
@@ -46,6 +45,44 @@ configure do
   # require 'sinatra/memcached'
   # set :cache_enable, (configatron.enable_memcache && Sinatra::Application.environment.to_s == 'production')
   # set :cache_logging, false # causes problems if using w/ partials! :/
+
+  # If you want to run this as a cron job, set up the conf file or pass this ENV param (CRON=1 ruby share.rb)
+  # if configatron.spawn_cron_job || ENV['CRON'] == 1
+  #   require 'spork'
+  #   Spork.spork do
+  #     require "helpers/admin"
+  # 
+  #     spawn_loop = true
+  #     sleep 2 # Let Sinatra load up first!
+  #     while spawn_loop
+  #       STDERR.puts "Running seeder..."
+  #       begin
+  #         run_seeder
+  #         unless @errors.blank?
+  #           STDERR.puts "** ERRORS:"
+  #           @errors.each do |e|
+  #             STDERR.puts "   * #{e}"
+  #           end
+  #         end
+  #         unless @success.blank?
+  #           @sucess.each do |s|
+  #             STDERR.puts "#{s} !"
+  #           end
+  #         end
+  #         @success, @errors = nil, nil
+  #         STDERR.puts "-"*30
+  #         STDERR.puts "\n"
+  #         sleep 10 # Sleep one minute
+  #       rescue Timeout::Erro
+  #         spawn_loop = false
+  #         STDERR.puts "\n\nQutting seeder. (Timeout error.)\n\n"
+  #       rescue
+  #         spawn_loop = false
+  #         STDERR.puts "\n\nQutting seeder. (Unknown Error!)\n\n"
+  #       end
+  #     end
+  #   end
+  # end
 
   set :sessions, true
   set :views, File.dirname(__FILE__) + '/views/'+ configatron.template_name

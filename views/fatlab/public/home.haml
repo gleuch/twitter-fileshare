@@ -1,0 +1,72 @@
+#latest_tweet.box
+  %h2 Latest Tweet
+  .content
+    - unless @tweet.blank?
+      - user_file = @tweet.file.user_files.first(:user_id => @tweet.user.id, :file_id => @tweet.file.id) rescue nil
+      .tweet
+        %h3= @tweet.tweet_message rescue 'Could not load tweet&hellip;'
+        %h6 
+        %p
+          - if user_file
+            Tweet ##{user_file.tweet_count} for #{@tweet.file.name}
+            &nbsp;&nbsp;/&nbsp;&nbsp;
+          %a.line{:href => "http://www.twitter.com/#{@tweet.user.screen_name}/statuses/#{@tweet.tweet_id}"} View Tweet
+          &nbsp;&nbsp;/&nbsp;&nbsp;
+          %a.line{:href => "http://www.twitter.com/#{@tweet.user.screen_name}"} Follow @#{@tweet.user.screen_name}
+
+    - else
+      %p.suggest #{configatron.site_name} has not tweeted yet. OH MY!
+
+
+#current_seeds.box
+  %h2 Currently Seeded Files
+  .content
+    - unless @current_files.blank?
+      - @current_files.each do |file|
+        - pct = (file.cursor_position/file.cursor_length.to_f)*100 rescue 0
+        .file
+          %h3
+            = file.file.name
+            %span.note (#{file_size(file.file.name)})
+          .status.rel.c
+            .pct.abs #{sprintf("%.02f", pct)}%
+            .bar{:style => "width: #{pct.ceil}%;"} &nbsp;
+          %p
+            Time remaining: #{file_time_left(file)}
+            &nbsp;&nbsp;/&nbsp;&nbsp;
+            Tweets: #{tweets_left(file)}
+            &nbsp;&nbsp;/&nbsp;&nbsp;
+            %a.line{:href => "http://www.twitter.com/#{file.user.screen_name}"} Follow @#{file.user.screen_name}
+
+    - else
+      %p.suggest There are no seeds being shared at this time.
+
+
+#completed_seeds.box
+  %h2 Completed Seeded Files
+  .content
+    - unless @completed_files.blank?
+      - @completed_files.each do |file|
+        .file
+          %a{:href => "/leech/#{file.id}"}
+            %h3= file.file.name
+            %p Download from Twitter (#{file_size(file.file.name)})
+    - else
+      %p.suggest There are no completed seeds at this time.
+
+
+#about.box
+  %h2 About Twitter Filesharing
+  .content
+    %h3 Why Filesharing on Twitter?
+    %p Governments and private organizations continue to lock down legitimate file sharing through raids, law suits, and "consumer protection" laws & treaties, mainly targeting those who pirate movies, music, and software through BitTorrent and other underground distribution methods. But anyone that knows just a little bit about technology knows file sharing can be done through any medium. This began with Usenet groups, where the binary data was converted to text characters and reprocessed for download. This began one of the first methods of photo sharing. Facsimile machines follow a similar method of dissemination of binary data. And even ham radio used teletype to transmit photos across long distances by converting photos to ASCII before transmission. <Link "ham radio" to http://ascii.textfiles.com/archives/879>
+    %p Today, we have advanced systems built for sharing files: websites, FTP, BitTorrent, email, CD/DVDs, hard drives. We also have many systems today that mirror prior technology of Usenet newsgroups, paging devices, IRC chat rooms, and IM status messages, of which the largest modern equivalent today is Twitter.
+    %p If Twitter is today's Usenet and Usenet was used for file sharing years ago, why can't Twitter be utilized today for file sharing?
+
+    %h3{:style => 'padding-top: 16px;'} Seeding Files to Twitter
+    %p
+      Start your own Twitter file seeder by <a href="http://github.com/gleuch/twitter-fileshare"><strong>running the code</strong></a> on your server.
+      %small (Some knowledge of Ruby and minor application setup required. <a href="http://github.com/gleuch/twitter-fileshare#readme">Read more&hellip;</a>)
+    %p A downloadable application will be available soon.
+    %p
+      %small Project by <a href="http://gleuch.com">Greg Leuch</a> and <a href="http://theowatson.com">Theo Watson</a>.
