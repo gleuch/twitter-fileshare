@@ -12,7 +12,7 @@ Today, we have advanced systems built for sharing files: websites, FTP, BitTorre
 If Twitter is today's Usenet and Usenet was used for file sharing years ago, why can't Twitter be utilized today for file sharing?
 Seeding Files to Twitter
 
-Project by [http://gleuch.com Greg Leuch] and [http://theowatson.com Theo Watson].
+Project by (http://gleuch.com)Greg Leuch and (http://theowatson.com)Theo Watson.
 
 
 
@@ -21,8 +21,8 @@ h2. How to Install
 Installation of Twitter Fileshare is straightforward by following the instructions below.
 
 
-* Create a new Twitter account. http://twitter.com/signup
-* Create a Twitter application. http://twitter.com/apps/new
+* Create a new Twitter account. (http://twitter.com/signup)http://twitter.com/signup
+* Create a Twitter application. (http://twitter.com/apps/new)http://twitter.com/apps/new
 ** Set Application Type to "Browser".
 ** Callback URL is http://yourdomain.com/admin/auth
 ** Access Type is "Read & Write Access"
@@ -31,22 +31,21 @@ Installation of Twitter Fileshare is straightforward by following the instructio
 ** Be sure to create a different launch code and replace that code in the cron job below!
 * Restart your app.
 * Sync your Twitter account to the application by going to the admin section (http://yourdomain.com/admin)
-* Goto your settings and make sure you have Geotagging enabled.
-* Create a new trip in the database. (Coming soon, in meantime, use MySQL database.)
+* Create folder specified for files in your settings.yml and add files.
 * Setup a cron job to run every minute.
 ** 00-59 * * * * wget -q http://yourdomain.com/run/YOUR-LAUNCH-CODE >/dev/null 2>&1
-* Volá!
+* Go into the admin section and queue up the file you want sent via the Twitter account(s) you have synced.
+* Watch the Twitter fileshare magic happen!
 
 
-
-
-
-h2. Known Bugs
-  None, at the moment.
 
 h2. To-do
+
 * Make downloadable installer
 * Make true Twitter fetching system
 
+
 h2. Notes
+
+* Twitter allows a max of 1,000 tweets per account per day. Don't be alarmed if your account stops tweeting during certain parts of the day.
 * With DataMapper > 0.10.0, you may get a NoMethodError on 'find_by_sql'. To fix, install the dm-ar-finders gem.
