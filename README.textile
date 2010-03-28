@@ -29,6 +29,7 @@ Installation of Twitter Fileshare is straightforward by following the instructio
 ** Callback URL is http://yourdomain.com/admin/auth
 ** Access Type is "Read & Write Access"
 ** Check the box for using Twitter for login.
+* Rename the settings.yml.default to settings.yml and the config.sample.ru to config.ru. (Minor changes may need to be made to config.ru for your server setup.)
 * Update the settings.yml file's Twitter oAuth token and secret with the one Twitter created for your new app.
 ** Be sure to create a different launch code and replace that code in the cron job below!
 * Restart your app.
