@@ -3,12 +3,12 @@ Tweet Filesharing
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  Source Code: http://github.com/gleuch/tweet-fileshare
+  Source Code: http://github.com/gleuch/twitter-fileshare
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 INSTALLATION
-  - Clone this repo (git clone git://github.com/gleuch/tweet-fileshare.git) into a web-accessible directory.
+  - Clone this repo (git clone git://github.com/gleuch/twitter-fileshare.git) into a web-accessible directory.
   - Rename settings.yml.default to settings.yml
       *** Change settings as needed. Be sure to add your Twitter OAuth key and secret strings! ***
   - Run.
