@@ -14,7 +14,7 @@ Today, we have advanced systems built for sharing files: websites, FTP, BitTorre
 If Twitter is today's Usenet and Usenet was used for file sharing years ago, why can't Twitter be utilized today for file sharing?
 Seeding Files to Twitter
 
-Project by "Greg Leuch":http://gleuch.com and "Theo Watson":http://theowatson.com. A "Free Art & Technology (FAT Lab)":http://fffff.at project.
+Project by "Greg Leuch":http://gleuch.com and "Theo Watson":http://theowatson.com. A "Free Art & Technology Lab (FAT Lab)":http://fffff.at project.
 
 
 
