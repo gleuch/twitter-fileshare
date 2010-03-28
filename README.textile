@@ -3,6 +3,8 @@ h1. Twitter Fileshare
 
 A lightweight Ruby Sinatra app to seed files to Twitter.
 
+
+
 h2. Why Twitter Fileshare
 
 Governments and private organizations continue to lock down legitimate file sharing through raids, law suits, and "consumer protection" laws & treaties, mainly targeting those who pirate movies, music, and software through BitTorrent and other underground distribution methods. But anyone that knows just a little bit about technology knows file sharing can be done through any medium. This began with Usenet groups, where the binary data was converted to text characters and reprocessed for download. This began one of the first methods of photo sharing. Facsimile machines follow a similar method of dissemination of binary data. And even ham radio used teletype to transmit photos across long distances by converting photos to ASCII before transmission.
@@ -12,7 +14,7 @@ Today, we have advanced systems built for sharing files: websites, FTP, BitTorre
 If Twitter is today's Usenet and Usenet was used for file sharing years ago, why can't Twitter be utilized today for file sharing?
 Seeding Files to Twitter
 
-Project by (http://gleuch.com)Greg Leuch and (http://theowatson.com)Theo Watson.
+Project by "Greg Leuch":http://gleuch.com and "Theo Watson":http://theowatson.com.
 
 
 
@@ -21,8 +23,8 @@ h2. How to Install
 Installation of Twitter Fileshare is straightforward by following the instructions below.
 
 
-* Create a new Twitter account. (http://twitter.com/signup)http://twitter.com/signup
-* Create a Twitter application. (http://twitter.com/apps/new)http://twitter.com/apps/new
+* Create a new Twitter account. "http://twitter.com/signup":http://twitter.com/signup
+* Create a Twitter application. "http://twitter.com/apps/new":http://twitter.com/apps/new
 ** Set Application Type to "Browser".
 ** Callback URL is http://yourdomain.com/admin/auth
 ** Access Type is "Read & Write Access"
@@ -43,6 +45,7 @@ h2. To-do
 
 * Make downloadable installer
 * Make true Twitter fetching system
+
 
 
 h2. Notes
