@@ -6,6 +6,7 @@ get '/' do
     @current_files = UserFile.all(:conditions => ["finished_at IS NULL AND active=?", true], :order => [:started_at.asc]) rescue nil
     @completed_files = UserFile.all(:conditions => ["finished_at IS NOT NULL AND active=?", true], :order => [:finished_at.desc]) rescue nil
     @tweet = Tweet.first(:order => [:updated_at.desc]) rescue nil
+    @users = User.all(:conditions => ['active=?', true], :order => [:screen_name.asc]) rescue nil
 
     haml :'public/home'
   # end

@@ -54,6 +54,20 @@
     - else
       %p.suggest There are no completed seeds at this time.
 
+#tweet_accounts.box
+  %h2 Tweeting Users
+  .content
+    - @users = @users.reject{|user| user.files.count < 1}
+    - unless @users.blank?
+      .c
+        - @users.each do |user|
+          .user.left
+            %a{:href => "http://www.twitter.com/#{user.screen_name}", :target => '_blank'}
+              %h5 @#{user.screen_name}
+              %p Tweeted #{user.files.count} #{user.files.count == 1 ? 'file' : 'files'}.
+    - else
+      %p.suggest There are no tweeting users at this time.
+
 
 #about.box
   %h2 About Twitter Filesharing

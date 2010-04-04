@@ -54,6 +54,10 @@ dl#nav dt.first {margin: -2px 8px 0 2px; font-size: 2.0em;}
 #content .content .file:first-child {padding: 0;}
 
 
+#content .user.left {margin: 0 24px 0 0;}
+#content .user.left a {width: 175px;}
+#content .user.left h5 {padding-bottom: 1px; margin: 0;}
+
 #content .file .status {background: #c1e7f0; margin: -3px 0 8px 0; width: 100%; min-width: 100%;}
 #content .file .status .bar {height: 57px; background: #28a0c6 url(../images/progress_bar_gloss.png) top left repeat-x; min-width: 19px;}
 #content .file .status .pct {top: 15px; left: 10px; font-weight: bold; font-size: 3.2em; line-height: 1.0em;}
