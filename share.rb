@@ -26,19 +26,19 @@ configure do
   ROOT = File.expand_path(File.dirname(__FILE__))
 
   # Libraries, etc.
-  %w(twitter_oauth configatron haml lib/spork lib/authenticate digest/md5 base64).each{|lib| require lib}
+  %w(twitter_oauth configatron haml ROOT/lib/spork ROOT/lib/authenticate digest/md5 base64).each{|lib| require lib.gsub(/ROOT/, ROOT)}
 
   # Configatron settings
   configatron.configure_from_yaml("#{ROOT}/settings.yml", :hash => Sinatra::Application.environment.to_s)
 
   # Controllers and helpers
   %w(admin oauth public).each do |lib|
-    require "controllers/#{lib}"
-    require "helpers/#{lib}"
+    require "#{ROOT}/controllers/#{lib}"
+    require "#{ROOT}/helpers/#{lib}"
   end
 
   # Models
-  %w(dm-core dm-types dm-timestamps dm-aggregates dm-ar-finders lib/model).each{|lib| require lib}
+  %w(dm-core dm-types dm-timestamps dm-aggregates dm-ar-finders ROOT/lib/model).each{|lib| require lib.gsub(/ROOT/, ROOT)}
   DataMapper.setup(:default, configatron.db_connection.gsub(/ROOT/, ROOT))
   DataMapper.auto_upgrade!
 
