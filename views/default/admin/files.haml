@@ -4,7 +4,7 @@
   %h2 Add a File
   .content
     - unless @files.blank? || @users.blank?
-      %form{:action => '/admin/queue', :method => 'post'}
+      %form{:action => "#{configatron.directory_path}/admin/queue", :method => 'post'}
 
         %h3 Users
         - @users.each do |user|

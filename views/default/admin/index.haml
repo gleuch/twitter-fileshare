@@ -7,7 +7,7 @@
       - @queue.each do |file|
         .file
           %h3
-            %a{:href => "/admin/queue/#{file.id}"}= file.file.name
+            %a{:href => "#{configatron.directory_path}/admin/queue/#{file.id}"}= file.file.name
           %p
             - if file.cursor_length && file.cursor_position
               - pct = (file.cursor_position/file.cursor_length.to_f)*100 rescue 0
@@ -18,7 +18,7 @@
               0% complete
             &nbsp;&nbsp;/&nbsp;&nbsp;
             Queued by
-            %a{:href => "/admin/users/#{file.user.id}"} @#{file.user.screen_name}
+            %a{:href => "#{configatron.directory_path}/admin/users/#{file.user.id}"} @#{file.user.screen_name}
       
     - else
       %dd.suggest There are no files.

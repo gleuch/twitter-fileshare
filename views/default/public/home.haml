@@ -36,7 +36,7 @@
             &nbsp;&nbsp;/&nbsp;&nbsp;
             Tweets: #{tweets_left(file)}
             &nbsp;&nbsp;/&nbsp;&nbsp;
-            %a{:href => "http://www.twitter.com/#{file.us er.screen_name}"} Follow @#{file.user.screen_name}
+            %a{:href => "http://www.twitter.com/#{file.user.screen_name}"} Follow @#{file.user.screen_name}
 
     - else
       %p.suggest There are no seeds being shared at this time.
@@ -48,7 +48,7 @@
     - unless @completed_files.blank?
       - @completed_files.each do |file|
         .file
-          %a{:href => "/leech/#{file.id}"}
+          %a{:href => "#{configatron.directory_path}/leech/#{file.id}"}
             %h3= file.file.name
             %p Download from Twitter (#{file_size(file.file.name)})
     - else
