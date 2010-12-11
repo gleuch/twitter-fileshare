@@ -3,6 +3,7 @@ development: &local
   site_language:    en
 
   template_name:          default
+  directory_path:         /
 
   twitter_oauth_token:		ENTER-YOUR-TOKEN-HERE
   twitter_oauth_secret:		ENTER-YOUR-TOKEN-SECRET-HERE

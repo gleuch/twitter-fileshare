@@ -147,6 +147,10 @@ end
 
 before do
   @_flash, session[:_flash] = session[:_flash], nil if session[:_flash]
+
+  prefix = Regexp.new("^#{configatron.directory_path}")
+  not_found && halt unless prefix.match(request.path_info)
+  request.path_info = request.path_info.gsub(prefix, (configatron.directory_path == request.path_info ? '/' : ''))
 end
 
 
