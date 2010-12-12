@@ -22,6 +22,15 @@ h2. How to Install
 
 Installation of Twitter Fileshare is straightforward by following the instructions below.
 
+* Grab the repo: @git://github.com/gleuch/twitter-fileshare.git@
+* Install bundler via @gem install bundler@
+* Make your tmp and log folders: @mkdir tmp log@
+* Copy config.sample.ru to config.ru (@cp config.sample.ru config.ru@) and customize as desired.
+* Copy settings.yml.default to settings.yml (@cp settings.yml.default settings.yml@) and customize your settings, install path, database connection, and more.
+** NB: If using other than mysql, update your Gemfile for the required adapter.
+* Run @bundle install@ to install all required gems.
+
+h2. How to Run
 
 * Create a new Twitter account. "http://twitter.com/signup":http://twitter.com/signup
 * Create a Twitter application. "http://twitter.com/apps/new":http://twitter.com/apps/new
@@ -29,14 +38,13 @@ Installation of Twitter Fileshare is straightforward by following the instructio
 ** Callback URL is http://yourdomain.com/admin/auth
 ** Access Type is "Read & Write Access"
 ** Check the box for using Twitter for login.
-* Rename the settings.yml.default to settings.yml and the config.sample.ru to config.ru. (Minor changes may need to be made to config.ru for your server setup.)
 * Update the settings.yml file's Twitter oAuth token and secret with the one Twitter created for your new app.
 ** Be sure to create a different launch code and replace that code in the cron job below!
-* Restart your app.
+* Restart your app using @touch tmp/restart.txt@.
 * Sync your Twitter account to the application by going to the admin section (http://yourdomain.com/admin)
 * Create folder specified for files in your settings.yml and add files.
 * Setup a cron job to run every minute.
-** 00-59 * * * * wget -q http://yourdomain.com/run/YOUR-LAUNCH-CODE >/dev/null 2>&1
+** @*/1 * * * * wget -q http://yourdomain.com/run/YOUR-LAUNCH-CODE >/dev/null 2>&1@
 * Go into the admin section and queue up the file you want sent via the Twitter account(s) you have synced.
 * Watch the Twitter fileshare magic happen!
 
