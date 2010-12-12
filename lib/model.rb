@@ -24,13 +24,19 @@ class ShareFile
 
   property :id,               Serial
   property :name,             String
-  property :use_b64,          Boolean,    :default => false
+  property :tweet_method,     String,     :default => 'byte'
   property :path,             Text
   property :created_at,       DateTime
   property :updated_at,       DateTime
 
   has n, :user_files, :child_key => [:file_id]
   has n, :users, :through => :user_files
+
+
+  def base64?; (self.tweet_method == 'base64'); end
+  def byte_string?; (self.tweet_method == 'byte'); end
+  def plain_text?; (self.tweet_method == 'plain'); end
+
 end
 
 

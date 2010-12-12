@@ -80,9 +80,10 @@ post '/admin/queue' do
   # @error ||= 'You must select a file.' if params[:file].nil? || params[:file] == ''
   @error ||= 'You must select a user.' if params[:user].nil? || params[:user] == ''
   @error ||= 'You must select a file.' unless find_file(params[:file])
+  @error ||= 'You must select a tweeting method.' if params[:tweet_method].nil? || params[:tweet_method] == ''
 
   unless @error
-    @file = ShareFile.create(:name => params[:file], :path => "#{configatron.file_folder_path.gsub(/\/$/, '')}/#{params[:file]}")
+    @file = ShareFile.create(:name => params[:file], :tweet_method => params[:tweet_method], :path => "#{configatron.file_folder_path.gsub(/\/$/, '')}/#{params[:file]}")
     # @file = ShareFile.first(:id => params[:file]) rescue nil
     @user = User.first(:id => params[:user]) rescue nil
 

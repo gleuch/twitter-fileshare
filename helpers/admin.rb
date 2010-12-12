@@ -37,8 +37,8 @@ helpers do
     "&#8734;"
   end
 
-  def read_from_file(file, cursor=0, b64=false)
-    path = b64 ? find_tmp_file(file.name) : find_file(file.name)
+  def read_from_file(file, cursor=0)
+    path = file.base64? ? find_tmp_file(file.name) : find_file(file.name)
     raise 'File not found.' unless path
 
     str, incr = "#{file.id}-#{cursor}:", 0 # Prepare inital vars, include unique id on string (Twitter duplicate tweet hack).
@@ -47,7 +47,7 @@ helpers do
     fr.seek(cursor, IO::SEEK_SET) # Move to position.
     fragment = fr.read(160) # Get out at least enough for a tweet.
     unless fragment.blank?
-      if b64
+      if file.base64? || file.plain_text?
         fragment.split('').each do |b|
           break if (str.length + 1) > 140 # Twitter length, do not cross.
           str << b; incr += 1
@@ -131,15 +131,19 @@ helpers do
         twitter_connect(user)
 
         if userfile.started_at.nil?
-          # Make b64 encoded...
-          tmp_file = "#{configatron.tmp_folder_path}/#{file.name}".gsub(/\/\//, '/')
-          File.open(tmp_file, 'w'){|f| f.write [IO.read(find_file(file.name))].pack("m")}
-          file.use_b64 = true
-          file.save
+          if file.tweet_method == 'b64'
+            # Make b64 encoded...
+            tmp_file = "#{configatron.tmp_folder_path}/#{file.name}".gsub(/\/\//, '/')
+            File.open(tmp_file, 'w'){|f| f.write [IO.read(find_file(file.name))].pack("m")}
+            file.use_b64 = true
+            file.save
+          end
 
           md5 = md5_file(file.name)
           tweet = "New file: #{file.name} (MD5: #{md5})"
-          tweet << " (Base64 encoded)" if file.use_b64
+          tweet << " (Base64 encoded)" if file.base64?
+          tweet << " (Byte string)" if file.byte_string?
+          tweet << " (Plain text)" if file.plain_text?
           info = dev? ? false : @twitter_client.update(tweet)
 
           if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
@@ -149,12 +153,10 @@ helpers do
             (@errors ||= []) << "Could not sent BOF tweet to #{user.screen_name}. (#{(info && info['error']) || 'Unknown Error'})"
           end
 
-
-          raise "EEEE"
           sleep 5 # Slow us down for a sec
         end
 
-        tweet = read_from_file(file, (userfile.cursor_position || 0), file.use_b64)
+        tweet = read_from_file(file, (userfile.cursor_position || 0))
 
         # Start tweet if there is something to tweet.
         unless tweet.blank? || tweet[:msg].blank?
@@ -176,7 +178,7 @@ helpers do
           if (info && (info['id'].to_s || '').match(/\d+/)) || dev?
             userfile.update(:finished_at => Time.now)
             (@success ||= []) << "Sent EOF tweet to #{user.screen_name}."
-            File.delete(find_tmp_file(file.name)) rescue nil if file.use_b64 # Get rid of tmp file!
+            File.delete(find_tmp_file(file.name)) rescue nil if file.base64? # Get rid of tmp file!
           else
             (@errors ||= []) << "Could not sent EOF tweet to #{user.screen_name}. (#{(info && info['error']) || 'Unknown Error'})"
           end

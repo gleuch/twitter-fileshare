@@ -26,6 +26,17 @@
                 = file
                 %span.note (#{file_size(file)})
 
+        %h3 Send Method
+        - tweet_method = params[:tweet_method]
+        - tweet_method ||= 'base64'
+        - {:base64 => 'Base64 Encoded', :byte => 'Byte String', :plain => 'Plain Text'}.each do |k,v|
+          .file.form.c
+            .left.select
+              %input{:id => "tweet_method_#{k.to_s}_radio", :type => 'radio', :name => 'tweet_method', :value => k.to_s, :checked => (tweet_method == k.to_s ? 'checked' : nil)}
+
+            .left{:onclick => "var b = $('#tweet_method_#{k.to_s}_radio'); b.attr('checked') ? b.removeAttr('checked') :  b.attr('checked', 'checked');"}
+              %h4= v
+
         %p.buttons
           %button Queue File
     
