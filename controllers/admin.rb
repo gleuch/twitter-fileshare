@@ -65,7 +65,7 @@ get '/admin/files' do
   # Check for new files
   queued_files = (ShareFile.all.collect(&:name) || []).push('.', '..')
 
-  @files = (Dir.entries(configatron.folder_path) || []).reject{|f| queued_files.include?(f)}
+  @files = (Dir.entries(configatron.file_folder_path) || []).reject{|f| queued_files.include?(f)}
   # @files = ShareFile.all(:order => [:name.asc]) rescue nil
 
   @users = User.seeders.all(:order => [:screen_name.asc]) rescue nil
@@ -82,7 +82,7 @@ post '/admin/queue' do
   @error ||= 'You must select a file.' unless find_file(params[:file])
 
   unless @error
-    @file = ShareFile.create(:name => params[:file], :path => "#{configatron.folder_path.gsub(/\/$/, '')}/#{params[:file]}")
+    @file = ShareFile.create(:name => params[:file], :path => "#{configatron.file_folder_path.gsub(/\/$/, '')}/#{params[:file]}")
     # @file = ShareFile.first(:id => params[:file]) rescue nil
     @user = User.first(:id => params[:user]) rescue nil
 

@@ -15,7 +15,7 @@ module Sinatra
   end
  
   def authorized?
-    request.env['REMOTE_USER']
+    (configatron.skip_auth === true ? true : request.env['REMOTE_USER'])
   end
  
   def authorize(username, password)

@@ -24,6 +24,7 @@ class ShareFile
 
   property :id,               Serial
   property :name,             String
+  property :use_b64,          Boolean,    :default => false
   property :path,             Text
   property :created_at,       DateTime
   property :updated_at,       DateTime

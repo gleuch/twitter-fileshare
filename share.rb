@@ -30,6 +30,7 @@ configure do
 
   # Configatron settings
   configatron.configure_from_yaml("#{ROOT}/settings.yml", :hash => Sinatra::Application.environment.to_s)
+  configatron.directory_path = '' if configatron.directory_path == '/'
 
   # Controllers and helpers
   %w(admin oauth public).each do |lib|
@@ -92,6 +93,7 @@ end
 
 helpers do
   def dev?; (Sinatra::Application.environment.to_s != 'production'); end
+  # def dev?; false; end
 
   def partial(name, options = {})
     item_name, counter_name = name.to_sym, "#{name}_counter".to_sym
