@@ -1,9 +1,6 @@
 # Tweet Fileshare
 # idea by Theo Watson, developed by Greg Leuch
 
-require 'rubygems'
-require 'sinatra'
-
 
 configure :development do
   # set :raise_errors, Proc.new { false }
