@@ -25,6 +25,7 @@ Installation of Twitter Fileshare is straightforward by following the instructio
 * Grab the repo: @git://github.com/gleuch/twitter-fileshare.git@
 * Install bundler via @gem install bundler@
 * Make your tmp and log folders: @mkdir tmp log@
+* Make your tweetable files folder and Base64 temp folders (outside of the repo folder). Ensure your temp folder has full (777) permissions.
 * Copy config.sample.ru to config.ru (@cp config.sample.ru config.ru@) and customize as desired.
 * Copy settings.yml.default to settings.yml (@cp settings.yml.default settings.yml@) and customize your settings, install path, database connection, and more.
 ** NB: If using other than mysql, update your Gemfile for the required adapter.

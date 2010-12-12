@@ -131,12 +131,10 @@ helpers do
         twitter_connect(user)
 
         if userfile.started_at.nil?
-          if file.tweet_method == 'b64'
-            # Make b64 encoded...
+          # Make b64 encoded...
+          if file.base64?
             tmp_file = "#{configatron.tmp_folder_path}/#{file.name}".gsub(/\/\//, '/')
             File.open(tmp_file, 'w'){|f| f.write [IO.read(find_file(file.name))].pack("m")}
-            file.use_b64 = true
-            file.save
           end
 
           md5 = md5_file(file.name)
