@@ -23,20 +23,23 @@
   .content
     - unless @current_files.blank?
       - @current_files.each do |file|
-        - pct = (file.cursor_position/file.cursor_length.to_f)*100 rescue 0
-        .file
-          %h3
-            = file.file.name
-            %span.note (#{file_size(file.file.name)})
-          .status.rel.c
-            .pct.abs #{sprintf("%.02f", pct)}%
-            .bar{:style => "width: #{pct.ceil}%;"} &nbsp;
-          %p
-            Time remaining: #{file_time_left(file)}
-            &nbsp;&nbsp;/&nbsp;&nbsp;
-            Tweets: #{tweets_left(file)}
-            &nbsp;&nbsp;/&nbsp;&nbsp;
-            %a{:href => "http://www.twitter.com/#{file.user.screen_name}"} Follow @#{file.user.screen_name}
+        - begin
+          - pct = (file.cursor_position/file.cursor_length.to_f)*100 rescue 0
+          .file
+            %h3
+              = file.file.name
+              %span.note (#{file_size(file.file.name) rescue '&ndash;'})
+            .status.rel.c
+              .pct.abs #{sprintf("%.02f", pct)}%
+              .bar{:style => "width: #{pct.ceil}%;"} &nbsp;
+            %p
+              Time remaining: #{file_time_left(file) rescue '&ndash;'}
+              &nbsp;&nbsp;/&nbsp;&nbsp;
+              Tweets: #{tweets_left(file) rescue '&ndash;'}
+              &nbsp;&nbsp;/&nbsp;&nbsp;
+              %a{:href => "http://www.twitter.com/#{file.user.screen_name}"} Follow @#{file.user.screen_name}
+        - rescue
+          - #
 
     - else
       %p.suggest There are no seeds being shared at this time.
@@ -50,6 +53,6 @@
         .file
           %a{:href => "#{configatron.directory_path}/leech/#{file.id}"}
             %h3= file.file.name
-            %p Download from Twitter (#{file_size(file.file.name)})
+            %p Download from Twitter (#{file_size(file.file.name) rescue '&ndash;'})
     - else
       %p.suggest There are no completed seeds at this time.

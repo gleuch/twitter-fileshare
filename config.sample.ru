@@ -1,5 +1,7 @@
 require 'rubygems'
-require 'sinatra'
+require 'bundler'
+
+Bundler.require
 
 root_dir = File.dirname(__FILE__)
 
@@ -12,5 +14,5 @@ log = File.new(root_dir + "/log/production.log", "a")
 STDOUT.reopen(log)
 STDERR.reopen(log)
 
-require 'share'
+require File.join(root_dir, 'share.rb')
 run Sinatra::Application

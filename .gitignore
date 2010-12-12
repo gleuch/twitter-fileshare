@@ -4,3 +4,5 @@ settings.yml
 retweet.db
 config.ru
 *.sql
+log/
+tmp/
