@@ -14,7 +14,7 @@
 
             .left{:onclick => "var b = $('#user_#{user.id}_radio'); b.attr('checked') ? b.removeAttr('checked') :  b.attr('checked', 'checked');"}
               %h4= user.screen_name || user.account_id
-      
+
         %h3 Files
         - @files.each_with_index do |file, i|
           .file.form.c
@@ -28,6 +28,6 @@
 
         %p.buttons
           %button Queue File
-    
+
     - else
       %p.suggest There are no #{@users.blank? ? 'users' : 'files'} to choose from.

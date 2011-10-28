@@ -12,11 +12,11 @@ class User
 
   has n, :user_files
   has n, :files, :through => :user_files, :model => 'ShareFile'
-  
+
   def self.seeders
     all(:conditions => ["oauth_token IS NOT NULL AND oauth_secret IS NOT NULL AND oauth_token!='' AND oauth_secret!='' AND active=?", true])
   end
-    
+
 end
 
 class ShareFile

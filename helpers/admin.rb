@@ -10,7 +10,7 @@ helpers do
     return 'Not started' unless file.started_at
     return 'Calculating&hellip;' unless file.tweet_count > 3
     return 'Finished' if file.finished_at
-    
+
     total = ((file.tweet_count * file.cursor_length ) / file.cursor_position.to_f).ceil
 
     "#{file.tweet_count} of about #{total}"
@@ -30,7 +30,7 @@ helpers do
 
     time_now = (Time.now.to_i - Time.parse(file.started_at.to_s).to_i)
     time_left = (time_now*100)/pct_now.to_f
-    
+
     time = Time.at(Time.now.to_i + time_left).getutc
     "<span class='loctime' timestamp='#{time.iso8601}'>#{time}</span>"
   rescue
@@ -100,7 +100,7 @@ helpers do
 
     num = sprintf("%.01f", fsize)
 
-    return num if dec # return as decimal 
+    return num if dec # return as decimal
 
     # Get the ending
     ending = case pwr
