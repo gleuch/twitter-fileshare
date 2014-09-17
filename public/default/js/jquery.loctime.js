@@ -67,7 +67,7 @@
       var $l = s.strings, $t = $l.times, $d = $l.dates, words = false;
 
       if (/[a-z\s\-\_]?/i.test(stamp)) stamp = $.locTime.distance(stamp);
-      
+
       if (s.allowFuture) stamp = Math.abs(stamp);
       var d = {z:stamp, s:0, m:0, h:0, d:0, y:0};
       d.s = d.z/1000; d.m = d.s/60; d.h = d.m/60; d.d = d.h/24; d.y = d.d/365;
@@ -113,7 +113,7 @@
         } else {
           return $.locTime.format.date(s, d.z);
         }
-          
+
       },
       time : function(d, s) {
         return $.locTime.format.time(s, d.z);
@@ -163,7 +163,7 @@
     var self = this;
     if (self.length > 0) {
       /* Need to see if something better exists for this. */
-      var s = $.extend(true, $.evalJSON($.toJSON($.locTime.settings)), settings), cs = document.cookie.split('; '), i, v, found; 
+      var s = $.extend(true, $.evalJSON($.toJSON($.locTime.settings)), settings), cs = document.cookie.split('; '), i, v, found;
       for (i=0; i<cs.length; i++) {
         v = cs[i].split('=');
         if (v[0] == s.timezoneCookieName && v[1] && v[1] != '') s.timezone = v[1];

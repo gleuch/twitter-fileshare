@@ -14,7 +14,7 @@ configure :development do
        end
        super
      end
-  end 
+  end
   use Sinatra::Reloader
 end
 
@@ -49,7 +49,7 @@ configure do
   #   require 'spork'
   #   Spork.spork do
   #     require "helpers/admin"
-  # 
+  #
   #     spawn_loop = true
   #     sleep 2 # Let Sinatra load up first!
   #     while spawn_loop

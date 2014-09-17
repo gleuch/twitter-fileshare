@@ -8,14 +8,14 @@
 # but with all of the Rails stuff removed.... cause you are using Sinatra. If you are using Rails, Spawn is
 # what you need. If you are using something else besides Sinatra that is Rack-based under Passenger, and you are having trouble with
 # asynch processing, let me know if spork helped you.
-# 
+#
 module Spork
   # things to close in child process
   @@resources = []
   def self.resources
     @@resources
   end
-  
+
   # set the resource to disconnect from in the child process (when forking)
   def self.resource_to_close(resource)
     @@resources << resource
@@ -65,7 +65,7 @@ module Spork
 
     return child
   end
-  
+
 end
 
 # Patch to work with passenger

@@ -5,7 +5,7 @@
       - user_file = @tweet.file.user_files.first(:user_id => @tweet.user.id, :file_id => @tweet.file.id) rescue nil
       .tweet
         %h3= @tweet.tweet_message rescue 'Could not load tweet&hellip;'
-        %h6 
+        %h6
         %p
           - if user_file
             Tweet ##{user_file.tweet_count} for #{@tweet.file.name}

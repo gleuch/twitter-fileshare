@@ -25,7 +25,7 @@ end
 get '/admin/auth' do
   require_administrative_privileges
 
-  @title = 'Authenticate with Twitter'  
+  @title = 'Authenticate with Twitter'
 
   unless params[:denied].blank?
     @error = "We are sorry that you decided to not use #{configatron.site_name}. <a href=\"/\">Click</a> to return."
@@ -44,7 +44,7 @@ get '/admin/auth' do
       @user = User.first_or_create(:account_id => info['id'])
       @user.attributes = {:active => true, :account_id => info['id'], :screen_name => info['screen_name'], :oauth_token => @access_token.token, :oauth_secret => @access_token.secret}
       @user.save
-      
+
 
       # Set and clear session data
       session[:user], session[:account] = @user.id, @user.account_id

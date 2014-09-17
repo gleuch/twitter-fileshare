@@ -2,7 +2,7 @@
  * jQuery JSON Plugin
  * version: 1.0 (2008-04-17)
  */
-(function($) {   
+(function($) {
   function toIntegersAtLease(n) {return n < 10 ? '0' + n : n;}
   Date.prototype.toJSON = function(date) {return this.getUTCFullYear()   + '-' + toIntegersAtLease(this.getUTCMonth()) + '-' + toIntegersAtLease(this.getUTCDate());};
   var escapeable = /["\\\x00-\x1f\x7f-\x9f]/g, meta = {'\b': '\\b', '\t': '\\t', '\n': '\\n', '\f': '\\f', '\r': '\\r', '"' : '\\"', '\\': '\\\\'};
@@ -19,5 +19,5 @@ if(!this.JSON){JSON=function(){function f(n){return n<10?'0'+n:n;} Date.prototyp
 $(document).ready(function() {
 
   $('.loctime').locTime({'allowFuture':true});
-	
+
 });
